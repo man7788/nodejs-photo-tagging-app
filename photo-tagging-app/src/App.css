@@ -1,5 +1,25 @@
-#root {
+body {
   box-sizing: border-box;
+  background: rgb(45, 45, 45);
   margin: 0;
   padding: 0;
+}
+
+.App {
+  border: 5px solid orange;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 480px;
+  height: 640px;
+  cursor: pointer;
+  background-image: url(./images/penguins.jpg);
+  background-size: 480px 640px;
+}
+
+.title {
+  margin: 0;
+  font-size: 4rem;
+  font-weight: 600;
+  color: teal;
 }
