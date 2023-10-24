@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const coordsController = require("../controllers/coordsController");
+const targetsController = require("../controllers/targetsController");
 
-router.get("/coords", coordsController.coords);
-router.post("/target", coordsController.create_target);
+router.get("/targets", targetsController.targets);
+router.post("/target/create", targetsController.create_target);
 
 module.exports = router;
