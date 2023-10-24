@@ -1,54 +1,20 @@
 .peter,
 .sam,
 .eric {
-  border: 3px solid cyan;
   position: absolute;
 }
 
 .peter {
   width: 50px;
   height: 65px;
-  /* top: 280px; */
-  /* left: 110px; */
 }
 
 .sam {
   width: 50px;
   height: 72px;
-  /* top: 360px; */
-  /* left: 230px; */
 }
 
 .eric {
   width: 55px;
   height: 62px;
-  /* top: 320px; */
-  /* left: 350px; */
 }
-
-/* .target1 {
-  border: 3px solid cyan;
-  position: fixed;
-  width: 50px;
-  height: 65px;
-  top: 285px;
-  left: 115px;
-}
-
-.target2 {
-  border: 3px solid cyan;
-  position: fixed;
-  width: 50px;
-  height: 70px;
-  top: 365px;
-  left: 235px;
-}
-
-.target3 {
-  border: 3px solid cyan;
-  position: fixed;
-  width: 50px;
-  height: 65px;
-  top: 325px;
-  left: 355px;
-} */
