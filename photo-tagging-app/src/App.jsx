@@ -8,16 +8,18 @@ function App() {
   const [dropDownPosition, setDropDownPosition] = useState();
   const [cursor, setCursor] = useState('pointer');
   const [onTarget, setOnTarget] = useState('');
+
   // Fetch from api
   const targets = ['peter', 'sam', 'eric'];
-  const hitboxes = {
+  const [hitboxes, setHitboxes] = useState({
     peter: {
+      border: 'none',
       top: '280px',
       left: '110px',
     },
-    sam: { top: '360px', left: '230px' },
-    eric: { top: '320px', left: '350px' },
-  };
+    sam: { border: 'none', top: '360px', left: '230px' },
+    eric: { border: 'none', top: '320px', left: '350px' },
+  });
 
   const showDropDown = (e) => {
     const position = {
@@ -40,15 +42,27 @@ function App() {
     e.stopPropagation();
     setDropDownDisplay('none');
     setCursor('pointer');
+    const selection = e.target.textContent.toLowerCase();
+    checkTarget(selection);
   };
 
   const clickTarget = (e) => {
     e.stopPropagation();
-    console.log('on target');
     setOnTarget(e.target.id);
-    console.log(hitboxes[e.target.id]);
+    showDropDown(e);
     // clickPicture(e);
     // setHide('none');
+  };
+
+  const checkTarget = (selection) => {
+    if (selection === onTarget) {
+      const newTargetbox = {
+        ...hitboxes[selection],
+        border: '3px solid cyan',
+      };
+      const newHitboxes = { ...hitboxes, [selection]: newTargetbox };
+      setHitboxes(newHitboxes);
+    }
   };
 
   return (
