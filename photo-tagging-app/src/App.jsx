@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
 import styles from './App.module.css';
+import { useState, useEffect } from 'react';
+import useTargets from './api/targetAPI';
 import Dropdown from './components/Dropdown';
 import Target from './components/Target';
-import useTargets from './api/targetAPI';
+import Photo from './components/Photo';
+import Album from './images/Album';
 
 function App() {
   // Dropdown controls
@@ -15,8 +17,10 @@ function App() {
   const [hitboxes, setHitboxes] = useState({});
   const [onTarget, setOnTarget] = useState('');
 
+  // API fetch
   const { targets, error, loading } = useTargets();
 
+  // Reorganize fetched data to useState
   useEffect(() => {
     const nameList = [];
     let styleObj = {};
@@ -30,6 +34,8 @@ function App() {
     setHitboxes(styleObj);
   }, [targets]);
 
+  // (1) Show up click anywhere on picture
+  // (2) Show up click on target
   const showDropDown = (e) => {
     const position = {
       menu: {
@@ -47,17 +53,23 @@ function App() {
     setCursor('default');
   };
 
+  // (1) Close menu click on menu
+  // (2) Close menu click outside of menu
   const clickMenu = (e) => {
     e.stopPropagation();
+
     setDropDownDisplay('none');
     setCursor('pointer');
+
     const selection = e.target.textContent.toLowerCase();
     checkTarget(selection);
   };
 
   const clickTarget = (e) => {
     e.stopPropagation();
+
     setOnTarget(e.target.id);
+
     showDropDown(e);
     // clickPicture(e);
     // setHide('none');
@@ -76,6 +88,7 @@ function App() {
 
   if (error)
     return <h1 className={styles.error}>A network error was encountered</h1>;
+
   if (loading) return <h1 className={styles.loading}>Loading...</h1>;
 
   return (
@@ -96,6 +109,15 @@ function App() {
           />
         );
       })}
+      <div className={styles.frame}>
+        {Album.map((peguin) => {
+          const name = Object.keys(peguin);
+          console.log(peguin);
+          return (
+            <Photo key={name[0]} photo={peguin[name[0]]} peguin={name[0]} />
+          );
+        })}
+      </div>
       <Dropdown
         display={dropDownDisplay}
         position={dropDownPosition}

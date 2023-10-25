@@ -24,6 +24,11 @@ body {
   color: teal;
 }
 
+.frame {
+  display: flex;
+  gap: 20px;
+}
+
 .error {
   composes: App;
   color: black;
