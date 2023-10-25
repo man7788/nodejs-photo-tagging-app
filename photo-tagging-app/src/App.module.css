@@ -23,3 +23,12 @@ body {
   font-weight: 600;
   color: teal;
 }
+
+.error {
+  composes: App;
+  color: black;
+}
+.loading {
+  composes: App;
+  color: teal;
+}
