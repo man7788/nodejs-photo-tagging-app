@@ -16,6 +16,11 @@ function App() {
   const [names, setNames] = useState([]);
   const [hitboxes, setHitboxes] = useState({});
   const [onTarget, setOnTarget] = useState('');
+  const [iconStyles, setIconStyles] = useState({
+    peter: { filter: 'brightness(100%)' },
+    sam: { filter: 'brightness(100%)' },
+    eric: { filter: 'brightness(100%)' },
+  });
 
   // API fetch
   const { targets, error, loading } = useTargets();
@@ -83,6 +88,10 @@ function App() {
       };
       const newHitboxes = { ...hitboxes, [selection]: newTargetbox };
       setHitboxes(newHitboxes);
+
+      const newStyle = { color: 'grey', filter: 'brightness(50%)' };
+      const newIconStyles = { ...iconStyles, [selection]: newStyle };
+      setIconStyles(newIconStyles);
     }
   };
 
@@ -112,9 +121,14 @@ function App() {
       <div className={styles.frame}>
         {Album.map((peguin) => {
           const name = Object.keys(peguin);
-          console.log(peguin);
+          const style = iconStyles[name[0].toLowerCase()];
           return (
-            <Photo key={name[0]} photo={peguin[name[0]]} peguin={name[0]} />
+            <Photo
+              key={name[0]}
+              photo={peguin[name[0]]}
+              peguin={name[0]}
+              style={style}
+            />
           );
         })}
       </div>
