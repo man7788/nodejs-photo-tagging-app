@@ -1,0 +1,12 @@
+.Photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.Photo > img {
+  border: 3px solid white;
+  width: 80px;
+}
