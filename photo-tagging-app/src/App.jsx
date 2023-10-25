@@ -1,25 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './App.module.css';
 import Dropdown from './components/Dropdown';
 import Target from './components/Target';
+import useTargets from './api/targetAPI';
 
 function App() {
+  // Dropdown controls
   const [dropDownDisplay, setDropDownDisplay] = useState('none');
   const [dropDownPosition, setDropDownPosition] = useState();
   const [cursor, setCursor] = useState('pointer');
+
+  // Target controls
+  const [names, setNames] = useState([]);
+  const [hitboxes, setHitboxes] = useState({});
   const [onTarget, setOnTarget] = useState('');
 
-  // Fetch from api
-  const targets = ['peter', 'sam', 'eric'];
-  const [hitboxes, setHitboxes] = useState({
-    peter: {
-      border: 'none',
-      top: '280px',
-      left: '110px',
-    },
-    sam: { border: 'none', top: '360px', left: '230px' },
-    eric: { border: 'none', top: '320px', left: '350px' },
-  });
+  const { targets, error, loading } = useTargets();
+
+  useEffect(() => {
+    const nameList = [];
+    let styleObj = {};
+
+    for (const i in targets) {
+      nameList.push(targets[i].name);
+      styleObj = { ...styleObj, [targets[i].name]: targets[i].style };
+    }
+
+    setNames(nameList);
+    setHitboxes(styleObj);
+  }, [targets]);
 
   const showDropDown = (e) => {
     const position = {
@@ -65,6 +74,10 @@ function App() {
     }
   };
 
+  if (error)
+    return <h1 className={styles.error}>A network error was encountered</h1>;
+  if (loading) return <h1 className={styles.loading}>Loading...</h1>;
+
   return (
     <div
       className={styles.App}
@@ -72,12 +85,12 @@ function App() {
       style={{ cursor: cursor }}
       data-testid="App">
       <div className={styles.title}>{"Where're They?"}</div>
-      {targets.map((target) => {
-        const position = hitboxes[target];
+      {names.map((name) => {
+        const position = hitboxes[name];
         return (
           <Target
-            key={target}
-            name={target}
+            key={name}
+            name={name}
             position={position}
             clickTarget={clickTarget}
           />
