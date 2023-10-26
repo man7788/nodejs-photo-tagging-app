@@ -1,7 +1,7 @@
 import styles from '../styles/Clock.module.css';
 import { useState, useEffect } from 'react';
 
-const Clock = ({ gameover, setPopupStyles, setScore, setHide }) => {
+const Clock = ({ gameover, setPopupStyles, setScore }) => {
   const [clock, setClock] = useState();
   const [time, setTime] = useState({ s: 0, m: 0, h: 0 });
 

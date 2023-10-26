@@ -88,8 +88,6 @@ function App() {
     setOnTarget(e.target.id);
 
     showDropDown(e);
-    // clickPicture(e);
-    // setHide('none');
   };
 
   const checkTarget = (selection) => {
@@ -118,7 +116,6 @@ function App() {
 
   useEffect(() => {
     if (score.length === Object.keys(Album).length) {
-      // setPopupStyles({ display: 'flex' });
       setScore(true);
     }
   }, [score]);
