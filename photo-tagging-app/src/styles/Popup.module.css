@@ -28,3 +28,10 @@
 .Popup > form > button {
   margin-top: 0.2rem;
 }
+
+.Popup > ul {
+  list-style-type: none;
+  font-size: 0.9rem;
+  align-self: center;
+  padding: 0;
+}
