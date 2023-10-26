@@ -3,7 +3,7 @@ const Score = require("../models/score");
 const asyncHandler = require("express-async-handler");
 
 exports.scores = asyncHandler(async (req, res, next) => {
-  const scores = await Score.find({}).sort({ score: 1 });
+  const scores = await Score.find({}).sort({ time: 1 }).limit(5);
   res.json(scores);
 });
 
@@ -13,10 +13,6 @@ exports.create_score = [
     .isLength({ min: 1, max: 200 })
     .escape(),
   body("time", "Time must not be empty.")
-    .trim()
-    .isLength({ max: 200 })
-    .escape(),
-  body("score", "Score must not be empty.")
     .trim()
     .isLength({ max: 200 })
     .escape(),
