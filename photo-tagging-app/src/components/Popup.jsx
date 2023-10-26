@@ -22,13 +22,7 @@ const Popup = ({ style, score, setShowTable }) => {
   const submitScore = (e) => {
     e.preventDefault();
 
-    const addScore = (input) => {
-      input = input.split(':');
-      return Number(input[0] + input[1] + input[2]);
-    };
-    const totalScore = addScore(score);
-    const scoreObj = { name, time: score, score: totalScore };
-    console.log(scoreObj);
+    const scoreObj = { name, time: score };
 
     //API POST
     fetch(`http://localhost:3000/score/create`, {
@@ -52,8 +46,8 @@ const Popup = ({ style, score, setShowTable }) => {
           throw new Error('form validation error');
         }
         console.log('Success:', response);
-        setShow(false);
         setShowTable(true);
+        setShow(false);
       })
       .catch((error) => {
         if (error && error.message !== 'form validation error') {
