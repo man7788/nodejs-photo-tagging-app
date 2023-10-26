@@ -4,35 +4,55 @@ import styles from '../styles/Highscore.module.css';
 const Highscore = ({ show }) => {
   const [list, setList] = useState([]);
 
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(true);
+
+  // Newest data not show up after form submit
   useEffect(() => {
-    // const unsub = onSnapshot(q, (snapshot) => {
-    // let scoreList = [];
-    // snapshot.docs.forEach((doc) => {
-    //   if (scoreList.length < 5) {
-    // scoreList.push({ ...doc.data(), id: doc.id });
-    // console.log(doc.data());
-    // }
-    // });
-    // console.log(scoreList);
-    //     const listItem = scoreList.map((player) => {
-    //       return (
-    //         <li key={player.id}>
-    //           {player.name}
-    //           <br />
-    //           {`Time: ${player.time}`}
-    //         </li>
-    //       );
-    //     });
-    //     setList(listItem);
-    //   });
+    fetch('http://localhost:3000/highscore', { mode: 'cors' })
+      .then((response) => {
+        if (response.status >= 400) {
+          throw new Error('server error');
+        }
+        return response.json();
+      })
+      .then((response) => setList(response))
+      .catch((error) => setError(error))
+      .finally(() => setLoading(false));
   }, []);
+
+  if (error) {
+    return (
+      <div>
+        <p>A network error was encountered</p>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   return (
     <div
       className={styles.Highscore}
       style={{ display: show ? 'block' : 'none' }}>
-      <div className="table">
+      <div className={styles.table}>
         <h2>Top 5 Players</h2>
-        <ul>{list}</ul>
+        <ul>
+          {list.map((player) => {
+            return (
+              <li key={player._id}>
+                {player.name}
+                <br /> {`Time: ${player.time}`}
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </div>
   );
