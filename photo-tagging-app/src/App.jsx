@@ -6,6 +6,7 @@ import Target from './components/Target';
 import Photo from './components/Photo';
 import Album from './images/Album';
 import Popup from './components/Popup';
+import Clock from './components/Clock';
 
 function App() {
   // Dropdown controls
@@ -115,7 +116,8 @@ function App() {
 
   useEffect(() => {
     if (score.length === Object.keys(Album).length) {
-      setPopupStyles({ display: 'flex' });
+      // setPopupStyles({ display: 'flex' });
+      setScore(true);
     }
   }, [score]);
 
@@ -176,7 +178,13 @@ function App() {
         position={dropDownPosition}
         clickMenu={clickMenu}
       />
-      <Popup style={popupStyles} />
+      <Clock
+        gameover={score}
+        setPopupStyles={setPopupStyles}
+        setScore={setScore}
+        // setHide={setHide}
+      />
+      <Popup style={popupStyles} score={score} />
     </div>
   );
 }
