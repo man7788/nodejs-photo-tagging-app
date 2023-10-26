@@ -5,11 +5,12 @@ import Dropdown from './components/Dropdown';
 import Target from './components/Target';
 import Photo from './components/Photo';
 import Album from './images/Album';
+import Popup from './components/Popup';
 
 function App() {
   // Dropdown controls
   const [dropDownDisplay, setDropDownDisplay] = useState('none');
-  const [dropDownPosition, setDropDownPosition] = useState();
+  const [dropDownPosition, setDropDownPosition] = useState(null);
   const [cursor, setCursor] = useState('pointer');
 
   // Target controls
@@ -22,40 +23,48 @@ function App() {
     eric: { filter: 'brightness(100%)' },
   });
 
+  //Popup controls
+  const [popupStyles, setPopupStyles] = useState({ display: 'none' });
+  const [score, setScore] = useState([]);
+
   // API fetch
   const { targets, error, loading } = useTargets();
 
   // Reorganize fetched data to useState
   useEffect(() => {
     const nameList = [];
-    let styleObj = {};
+    let positionObj = {};
 
     for (const i in targets) {
       nameList.push(targets[i].name);
-      styleObj = { ...styleObj, [targets[i].name]: targets[i].style };
+      positionObj = { ...positionObj, [targets[i].name]: targets[i].style };
     }
 
     setNames(nameList);
-    setHitboxes(styleObj);
+    setHitboxes(positionObj);
   }, [targets]);
 
   // (1) Show up click anywhere on picture
   // (2) Show up click on target
   const showDropDown = (e) => {
-    const position = {
-      menu: {
-        top: `${e.pageY + 25}px`,
-        left: `${e.pageX + 25}px`,
-      },
-      box: {
-        top: `${e.pageY - 28}px`,
-        left: `${e.pageX - 28}px`,
-      },
-    };
+    if (popupStyles.display === 'none') {
+      const position = {
+        menu: {
+          top: `${e.pageY + 25}px`,
+          left: `${e.pageX + 25}px`,
+        },
+        box: {
+          top: `${e.pageY - 28}px`,
+          left: `${e.pageX - 28}px`,
+        },
+      };
 
-    setDropDownPosition(position);
-    setDropDownDisplay('block');
-    setCursor('default');
+      setDropDownPosition(position);
+      setDropDownDisplay('block');
+      setCursor('default');
+    } else {
+      return;
+    }
   };
 
   // (1) Close menu click on menu
@@ -92,8 +101,38 @@ function App() {
       const newStyle = { color: 'grey', filter: 'brightness(50%)' };
       const newIconStyles = { ...iconStyles, [selection]: newStyle };
       setIconStyles(newIconStyles);
+      checkScore(selection);
     }
   };
+
+  const checkScore = (selection) => {
+    const newList = [...score];
+    if (!score.includes(selection)) {
+      newList.push(selection);
+      setScore(newList);
+    }
+  };
+
+  useEffect(() => {
+    if (score.length === Object.keys(Album).length) {
+      setPopupStyles({ display: 'flex' });
+    }
+  }, [score]);
+
+  useEffect(() => {
+    if (popupStyles.display === 'flex') {
+      setCursor('default');
+
+      let newHitboxObj = { ...hitboxes };
+      const names = Object.keys(newHitboxObj);
+
+      for (const name of names) {
+        newHitboxObj[name] = { ...newHitboxObj[name], border: 'none' };
+      }
+
+      setHitboxes(newHitboxObj);
+    }
+  }, [popupStyles]);
 
   if (error)
     return <h1 className={styles.error}>A network error was encountered</h1>;
@@ -137,6 +176,7 @@ function App() {
         position={dropDownPosition}
         clickMenu={clickMenu}
       />
+      <Popup style={popupStyles} />
     </div>
   );
 }
