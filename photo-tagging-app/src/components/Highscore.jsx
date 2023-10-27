@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import styles from '../styles/Highscore.module.css';
 
-const Highscore = ({ show }) => {
+const Highscore = () => {
   const [list, setList] = useState([]);
 
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
 
-  // Newest data not show up after form submit
   useEffect(() => {
     fetch('http://localhost:3000/highscore', { mode: 'cors' })
       .then((response) => {
@@ -38,9 +37,7 @@ const Highscore = ({ show }) => {
   }
 
   return (
-    <div
-      className={styles.Highscore}
-      style={{ display: show ? 'block' : 'none' }}>
+    <div className={styles.Highscore}>
       <div className={styles.table}>
         <h2>Top 5 Players</h2>
         <ul>
