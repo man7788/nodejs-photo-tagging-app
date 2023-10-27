@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import styles from '../styles/Popup.module.css';
+import Highscore from './Highscore';
 
-const Popup = ({ style, score, setShowTable }) => {
+const Popup = ({ style, score }) => {
   const [name, setName] = useState('');
   const [show, setShow] = useState(true);
+  const [showTable, setShowTable] = useState(false);
 
   const [serverError, setServerError] = useState(false);
   const [formErrors, setFormErrors] = useState(null);
@@ -75,24 +77,27 @@ const Popup = ({ style, score, setShowTable }) => {
   }
 
   return (
-    <div className={styles.Popup} style={show ? style : { display: 'none' }}>
-      <div className={styles.header}>
-        <div>Congraulations!</div>
-        <div>Your Finish Time:</div>
-        <div>{score}</div>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+      <div className={styles.Popup} style={show ? style : { display: 'none' }}>
+        <div className={styles.header}>
+          <div>Congraulations!</div>
+          <div>Your Finish Time:</div>
+          <div>{score}</div>
+        </div>
+        <form method="post" onSubmit={onSubmitTask}>
+          <label htmlFor="name">Your Name:</label>
+          <input onChange={onhandleChange} value={name} type="text" id="name" />
+          <button type="submit">Sumbit Your Score</button>
+        </form>
+        {formErrors ? (
+          <ul>
+            {formErrors.map((error) => (
+              <li key={error.msg}>{error.msg}</li>
+            ))}
+          </ul>
+        ) : null}
       </div>
-      <form method="post" onSubmit={onSubmitTask}>
-        <label htmlFor="name">Your Name:</label>
-        <input onChange={onhandleChange} value={name} type="text" id="name" />
-        <button type="submit">Sumbit Your Score</button>
-      </form>
-      {formErrors ? (
-        <ul>
-          {formErrors.map((error) => (
-            <li key={error.msg}>{error.msg}</li>
-          ))}
-        </ul>
-      ) : null}
+      {showTable ? <Highscore /> : null}
     </div>
   );
 };
