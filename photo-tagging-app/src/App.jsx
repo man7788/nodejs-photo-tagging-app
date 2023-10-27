@@ -7,7 +7,6 @@ import Photo from './components/Photo';
 import Album from './images/Album';
 import Popup from './components/Popup';
 import Clock from './components/Clock';
-import Highscore from './components/Highscore';
 
 function App() {
   // Dropdown controls
@@ -28,7 +27,6 @@ function App() {
   //Popup controls
   const [popupStyles, setPopupStyles] = useState({ display: 'none' });
   const [score, setScore] = useState([]);
-  const [showTable, setShowTable] = useState(false);
 
   // API fetch
   const { targets, error, loading } = useTargets();
@@ -182,8 +180,8 @@ function App() {
         setPopupStyles={setPopupStyles}
         setScore={setScore}
       />
-      <Popup style={popupStyles} score={score} setShowTable={setShowTable} />
-      <Highscore show={showTable} />
+      <Popup style={popupStyles} score={score} />
+      {/* <Highscore show={showTable} /> */}
     </div>
   );
 }
