@@ -6,7 +6,8 @@ const Target = ({ name, position, clickTarget }) => {
       id={name}
       className={styles[name]}
       style={position}
-      onClick={clickTarget}></div>
+      onClick={clickTarget}
+      data-testid="target"></div>
   );
 };
 export default Target;
