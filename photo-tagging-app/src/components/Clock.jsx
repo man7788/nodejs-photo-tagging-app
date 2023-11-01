@@ -51,6 +51,10 @@ const Clock = ({ gameover, setPopupStyles, setScore }) => {
     }
   }, [time]);
 
-  return <div className={styles.Clock}>{clock}</div>;
+  return (
+    <div className={styles.Clock} data-testid="clock">
+      {clock}
+    </div>
+  );
 };
 export default Clock;

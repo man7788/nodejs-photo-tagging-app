@@ -78,8 +78,11 @@ const Popup = ({ style, score }) => {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <div className={styles.Popup} style={show ? style : { display: 'none' }}>
-        <div className={styles.header}>
+      <div
+        className={styles.Popup}
+        style={show ? style : { display: 'none' }}
+        data-testid="popup">
+        <div className={styles.header} data-testid="popup-header">
           <div>Congraulations!</div>
           <div>Your Finish Time:</div>
           <div>{score}</div>
