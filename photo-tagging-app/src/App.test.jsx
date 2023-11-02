@@ -251,6 +251,25 @@ describe('Dropdown menu', () => {
         expect(photoStyles.filter).toBe('brightness(50%)');
         expect(photoStyles.color).toBe('rgb(128, 128, 128)');
       });
+
+      it('should highlight correctly selected target', async () => {
+        const user = userEvent.setup();
+
+        render(<App />);
+
+        const targets = screen.getAllByTestId('target');
+
+        await waitFor(async () => await user.click(targets[0]));
+
+        const menuNames = screen.getAllByRole('listitem');
+
+        await waitFor(async () => await user.click(menuNames[0]));
+
+        const targetsAfter = screen.getAllByTestId('target');
+        const targetsAfterStyles = getComputedStyle(targetsAfter[0]);
+
+        expect(targetsAfterStyles.border).toBe('3px solid cyan');
+      });
     });
   });
 });
