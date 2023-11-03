@@ -1,6 +1,7 @@
 const { body, validationResult } = require("express-validator");
 const Score = require("../models/score");
 const asyncHandler = require("express-async-handler");
+const jwt = require("jsonwebtoken");
 
 exports.scores = asyncHandler(async (req, res, next) => {
   const scores = await Score.find({}).sort({ time: 1 }).limit(5);
@@ -31,8 +32,14 @@ exports.create_score = [
         errors: errors.array(),
       });
     } else {
-      await score.save();
-      res.json(score);
+      jwt.verify(req.token, "secretkey", async (err, authData) => {
+        if (err) {
+          res.sendStatus(403);
+        } else {
+          await score.save();
+          res.json(score);
+        }
+      });
     }
   }),
 ];
