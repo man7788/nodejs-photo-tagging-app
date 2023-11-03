@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../styles/Popup.module.css';
 import Highscore from './Highscore';
 
@@ -9,7 +9,33 @@ const Popup = ({ style, score }) => {
 
   const [serverError, setServerError] = useState(false);
   const [formErrors, setFormErrors] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/token`, {
+      mode: 'cors',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ handler: 'penguins' }),
+    })
+      .then((response) => {
+        if (response.status >= 400) {
+          throw new Error('server error');
+        }
+        return response.json();
+      })
+      .then((response) => {
+        setToken(response.token);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const onhandleChange = (e) => {
     setName(e.target.value);
@@ -32,6 +58,7 @@ const Popup = ({ style, score }) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(scoreObj),
     })
