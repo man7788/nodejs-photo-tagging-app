@@ -4,16 +4,28 @@ import Popup from './Popup';
 
 describe('Popup', () => {
   it('should popup when gameover with score', async () => {
+    beforeEach(() => {
+      global.fetch.mockReset();
+    });
+
+    const fetchedToken = { token: 'token' };
+
+    function createFetchResponse(data) {
+      return { json: () => new Promise((resolve) => resolve(data)) };
+    }
+
+    global.fetch = vi.fn().mockResolvedValue(createFetchResponse(fetchedToken));
+
     const { rerender } = render(<Popup style={{ display: 'none' }} />);
 
-    const popup = screen.getByTestId('popup');
+    const popup = await screen.findByTestId('popup');
     const popupStyles = getComputedStyle(popup);
 
     expect(popupStyles.display).toBe('none');
 
     rerender(<Popup style={{ display: 'flex' }} score={'01:01:01'} />);
 
-    const popupShow = screen.getByTestId('popup');
+    const popupShow = await screen.findByTestId('popup');
     const popupShowStyles = getComputedStyle(popupShow);
 
     expect(popupShowStyles.display).toBe('flex');
@@ -22,11 +34,13 @@ describe('Popup', () => {
 
   it('should submit highscore with form input', async () => {
     // https://runthatline.com/how-to-mock-fetch-api-with-vitest/
-
     beforeEach(() => {
       global.fetch.mockReset();
     });
+
     const user = userEvent.setup();
+
+    const fetchedToken = { token: 'token' };
 
     const scoreObj = {
       name: 'Foobar',
@@ -71,13 +85,14 @@ describe('Popup', () => {
     }
     global.fetch = vi
       .fn()
+      .mockResolvedValueOnce(createFetchResponse(fetchedToken))
       .mockResolvedValueOnce(createFetchResponse(scoreObj))
       .mockResolvedValueOnce(createFetchResponse(fetchedResponse));
 
     render(<Popup style={{ display: 'flex' }} score={'01:01:01'} />);
 
-    const input = screen.getByRole('textbox');
-    const button = screen.getByRole('button');
+    const input = await screen.findByRole('textbox');
+    const button = await screen.findByRole('button');
 
     await waitFor(async () => await user.type(input, 'Foobar'));
 
@@ -85,18 +100,35 @@ describe('Popup', () => {
 
     await waitFor(async () => await user.click(button));
 
-    expect(fetch).toHaveBeenCalledWith(`http://localhost:3000/score/create`, {
-      mode: 'cors',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    expect(fetch).toHaveBeenNthCalledWith(
+      2,
+      `http://localhost:3000/score/create`,
+      {
+        mode: 'cors',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer token',
+        },
+        body: JSON.stringify(scoreObj),
       },
-      body: JSON.stringify(scoreObj),
-    });
+    );
   });
 
   it('should show highscore after form submit', async () => {
+    beforeEach(() => {
+      global.fetch.mockReset();
+      vi.resetModules();
+    });
+
     const user = userEvent.setup();
+
+    const fetchedToken = { token: 'token' };
+
+    const scoreObj = {
+      name: 'Foobar',
+      time: '01:01:01',
+    };
 
     const fetchedResponse = [
       {
@@ -136,12 +168,14 @@ describe('Popup', () => {
     }
     global.fetch = vi
       .fn()
-      .mockResolvedValue(createFetchResponse(fetchedResponse));
+      .mockResolvedValueOnce(createFetchResponse(fetchedToken))
+      .mockResolvedValueOnce(createFetchResponse(scoreObj))
+      .mockResolvedValueOnce(createFetchResponse(fetchedResponse));
 
     render(<Popup />);
 
-    const input = screen.getByRole('textbox');
-    const button = screen.getByRole('button');
+    const input = await screen.findByRole('textbox');
+    const button = await screen.findByRole('button');
 
     await waitFor(async () => await user.type(input, 'Foobar'));
 
@@ -149,11 +183,12 @@ describe('Popup', () => {
 
     await waitFor(async () => await user.click(button));
 
-    const tableHeading = screen.getByRole('heading', {
+    const tableHeading = await screen.findByRole('heading', {
       name: /Top 5 Players/i,
     });
-    const highscore = screen.getAllByRole('listitem');
+    const highscore = await screen.findAllByRole('listitem');
 
+    expect(fetch).toHaveBeenCalled(0);
     expect(tableHeading.textContent).toMatch(/Top 5 Players/);
     expect(highscore).toHaveLength(5);
   });
