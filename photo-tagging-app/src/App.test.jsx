@@ -3,15 +3,6 @@ import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 import App from './App';
 
-// beforeEach(() => {
-//   vi.useFakeTimers();
-// });
-
-// afterEach(() => {
-//   vi.runOnlyPendingTimers();
-//   vi.useRealTimers();
-// });
-
 const mock = [
   {
     style: {
@@ -276,9 +267,22 @@ describe('Dropdown menu', () => {
 
 describe('Pop-up screen', () => {
   it('should pop up when gameover and display score time', async () => {
+    beforeEach(() => {
+      global.fetch.mockReset();
+      vi.resetModules();
+    });
+
     vi.useFakeTimers();
 
     const user = userEvent.setup();
+
+    const fetchedToken = { token: 'token' };
+
+    function createFetchResponse(data) {
+      return { json: () => new Promise((resolve) => resolve(data)) };
+    }
+
+    global.fetch = vi.fn().mockResolvedValue(createFetchResponse(fetchedToken));
 
     render(<App />);
 
@@ -287,7 +291,7 @@ describe('Pop-up screen', () => {
     const targets = screen.getAllByTestId('target');
     const clock = screen.getByTestId('clock');
 
-    const popupBefore = screen.getByTestId('popup');
+    const popupBefore = await screen.findByTestId('popup');
     const popupBeforeStyles = getComputedStyle(popupBefore);
 
     expect(popupBeforeStyles.display).toBe('none');
@@ -309,8 +313,8 @@ describe('Pop-up screen', () => {
       vi.runAllTimers();
     });
 
-    const popup = screen.getByTestId('popup');
-    const popupHeader = screen.getByTestId('popup-header');
+    const popup = await screen.findByTestId('popup');
+    const popupHeader = await screen.findByTestId('popup-header');
 
     const popupStyles = getComputedStyle(popup);
     const clockTime = clock.textContent;
