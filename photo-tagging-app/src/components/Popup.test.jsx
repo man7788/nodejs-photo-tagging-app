@@ -6,6 +6,7 @@ describe('Popup', () => {
   it('should popup when gameover with score', async () => {
     beforeEach(() => {
       global.fetch.mockReset();
+      vi.resetModules();
     });
 
     const fetchedToken = { token: 'token' };
