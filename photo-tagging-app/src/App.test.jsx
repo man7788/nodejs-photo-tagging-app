@@ -1,6 +1,5 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { act } from 'react-dom/test-utils';
 import App from './App';
 
 const mock = [
@@ -43,7 +42,7 @@ vi.mock('./api/targetAPI', () => ({
 }));
 
 describe('Dropdown menu', () => {
-  describe('Control without targets involved', () => {
+  describe('Basic menu control', () => {
     it('should display dropdown menu when click anywhere in app', async () => {
       const user = userEvent.setup();
 
@@ -105,10 +104,8 @@ describe('Dropdown menu', () => {
       expect(boxStyles.display).toBe('none');
       expect(menuStyles.display).toBe('none');
     });
-  });
 
-  describe('Control with targets involved', () => {
-    it('should hide dropdown menu when select name from non-target click', async () => {
+    it('should hide dropdown menu after selecting a name ', async () => {
       const user = userEvent.setup();
 
       render(<App />);
@@ -145,92 +142,32 @@ describe('Dropdown menu', () => {
       expect(boxStyles.display).toBe('none');
       expect(menuStyles.display).toBe('none');
     });
+  });
 
-    it('should hide dropdown menu when select incorrect name from target click', async () => {
-      const user = userEvent.setup();
-
-      render(<App />);
-
-      const targets = screen.getAllByTestId('target');
-
-      const menuBefore = screen.getByTestId('menu');
-      const boxBefore = screen.getByTestId('box');
-      const menuStylesBefore = getComputedStyle(menuBefore);
-      const boxStylesBefore = getComputedStyle(boxBefore);
-
-      expect(boxStylesBefore.display).toBe('none');
-      expect(menuStylesBefore.display).toBe('none');
-
-      await waitFor(async () => await user.click(targets[0]));
-
-      const menuShow = screen.getByTestId('menu');
-      const boxShow = screen.getByTestId('box');
-      const menuStylesShow = getComputedStyle(menuShow);
-      const boxStylesShow = getComputedStyle(boxShow);
-
-      expect(boxStylesShow.display).toBe('block');
-      expect(menuStylesShow.display).toBe('block');
-
-      const menuNames = screen.getAllByRole('listitem');
-
-      await waitFor(async () => await user.click(menuNames[1]));
-
-      const box = screen.getByTestId('box');
-      const menu = screen.getByTestId('menu');
-      const boxStyles = getComputedStyle(box);
-      const menuStyles = getComputedStyle(menu);
-
-      expect(boxStyles.display).toBe('none');
-      expect(menuStyles.display).toBe('none');
-    });
-
+  describe('Control with targets involved', () => {
     describe('Menu control with correct selected name', () => {
-      it('should hide dropdown menu from target click', async () => {
-        const user = userEvent.setup();
-
-        render(<App />);
-
-        const targets = screen.getAllByTestId('target');
-
-        const menuBefore = screen.getByTestId('menu');
-        const boxBefore = screen.getByTestId('box');
-        const menuStylesBefore = getComputedStyle(menuBefore);
-        const boxStylesBefore = getComputedStyle(boxBefore);
-
-        expect(boxStylesBefore.display).toBe('none');
-        expect(menuStylesBefore.display).toBe('none');
-
-        await waitFor(async () => await user.click(targets[0]));
-
-        const menuShow = screen.getByTestId('menu');
-        const boxShow = screen.getByTestId('box');
-        const menuStylesShow = getComputedStyle(menuShow);
-        const boxStylesShow = getComputedStyle(boxShow);
-
-        expect(boxStylesShow.display).toBe('block');
-        expect(menuStylesShow.display).toBe('block');
-
-        const menuNames = screen.getAllByRole('listitem');
-
-        await waitFor(async () => await user.click(menuNames[0]));
-
-        const box = screen.getByTestId('box');
-        const menu = screen.getByTestId('menu');
-        const boxStyles = getComputedStyle(box);
-        const menuStyles = getComputedStyle(menu);
-
-        expect(boxStyles.display).toBe('none');
-        expect(menuStyles.display).toBe('none');
-      });
-
       it('should change photo and text styles', async () => {
+        beforeEach(() => {
+          global.fetch.mockReset();
+        });
+
         const user = userEvent.setup();
+
+        const fetchedData = { result: true, position: { top: '', left: '' } };
+
+        function createFetchResponse(data) {
+          return { json: () => new Promise((resolve) => resolve(data)) };
+        }
+
+        global.fetch = vi
+          .fn()
+          .mockResolvedValue(createFetchResponse(fetchedData));
 
         render(<App />);
 
-        const targets = screen.getAllByTestId('target');
+        const appScreen = screen.getByTestId('App');
 
-        await waitFor(async () => await user.click(targets[0]));
+        await waitFor(async () => await user.click(appScreen));
 
         const menuNames = screen.getAllByRole('listitem');
 
@@ -244,13 +181,27 @@ describe('Dropdown menu', () => {
       });
 
       it('should highlight correctly selected target', async () => {
+        beforeEach(() => {
+          global.fetch.mockReset();
+        });
+
         const user = userEvent.setup();
+
+        const fetchedData = { result: true, position: { top: '', left: '' } };
+
+        function createFetchResponse(data) {
+          return { json: () => new Promise((resolve) => resolve(data)) };
+        }
+
+        global.fetch = vi
+          .fn()
+          .mockResolvedValue(createFetchResponse(fetchedData));
 
         render(<App />);
 
-        const targets = screen.getAllByTestId('target');
+        const appScreen = screen.getByTestId('App');
 
-        await waitFor(async () => await user.click(targets[0]));
+        await waitFor(async () => await user.click(appScreen));
 
         const menuNames = screen.getAllByRole('listitem');
 
@@ -277,18 +228,24 @@ describe('Pop-up screen', () => {
     const user = userEvent.setup();
 
     const fetchedToken = { token: 'token' };
+    const fetchedData = { result: true, position: { top: '', left: '' } };
 
     function createFetchResponse(data) {
       return { json: () => new Promise((resolve) => resolve(data)) };
     }
 
-    global.fetch = vi.fn().mockResolvedValue(createFetchResponse(fetchedToken));
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce(createFetchResponse(fetchedToken))
+      .mockResolvedValueOnce(createFetchResponse(fetchedData))
+      .mockResolvedValueOnce(createFetchResponse(fetchedData))
+      .mockResolvedValueOnce(createFetchResponse(fetchedData));
 
     render(<App />);
 
     // https://legacy.reactjs.org/docs/testing-recipes.html#timers
 
-    const targets = screen.getAllByTestId('target');
+    const appScreen = screen.getByTestId('App');
     const clock = screen.getByTestId('clock');
 
     const popupBefore = await screen.findByTestId('popup');
@@ -297,17 +254,23 @@ describe('Pop-up screen', () => {
     expect(popupBeforeStyles.display).toBe('none');
 
     // // https://github.com/vitest-dev/vitest/issues/3117
-    await waitFor(async () => await user.click(targets[0]));
+    await waitFor(async () => await user.click(appScreen));
     const menuNames0 = await screen.findAllByRole('listitem');
-    await waitFor(async () => await user.click(menuNames0[0]));
+    await act(async () => {
+      await waitFor(async () => await user.click(menuNames0[0]));
+    });
 
-    await waitFor(async () => await user.click(targets[1]));
+    await waitFor(async () => await user.click(appScreen));
     const menuNames1 = await screen.findAllByRole('listitem');
-    await waitFor(async () => await user.click(menuNames1[1]));
+    await act(async () => {
+      await waitFor(async () => await user.click(menuNames1[1]));
+    });
 
-    await waitFor(async () => await user.click(targets[2]));
+    await waitFor(async () => await user.click(appScreen));
     const menuNames2 = await screen.findAllByRole('listitem');
-    await waitFor(async () => await user.click(menuNames2[2]));
+    await act(async () => {
+      await waitFor(async () => await user.click(menuNames2[2]));
+    });
 
     act(() => {
       vi.runAllTimers();
