@@ -17,7 +17,6 @@ function App() {
   // Target controls
   const [names, setNames] = useState([]);
   const [hitboxes, setHitboxes] = useState({});
-  const [onTarget, setOnTarget] = useState('');
   const [iconStyles, setIconStyles] = useState({
     peter: { filter: 'brightness(100%)' },
     sam: { filter: 'brightness(100%)' },
@@ -30,23 +29,23 @@ function App() {
 
   // API fetch
   const { targets, error, loading } = useTargets();
+  const [clickPos, setClickPos] = useState({});
 
   // Reorganize fetched data to useState
   useEffect(() => {
     const nameList = [];
-    let positionObj = {};
+    const hitboxObj = {};
 
     for (const i in targets) {
       nameList.push(targets[i].name);
-      positionObj = { ...positionObj, [targets[i].name]: targets[i].style };
+      hitboxObj[targets[i].name] = { top: '', left: '', border: 'none' };
     }
 
     setNames(nameList);
-    setHitboxes(positionObj);
+    setHitboxes(hitboxObj);
   }, [targets]);
 
-  // (1) Show up click anywhere on picture
-  // (2) Show up click on target
+  // Show up click anywhere on picture
   const showDropDown = (e) => {
     if (popupStyles.display === 'none') {
       const position = {
@@ -59,7 +58,7 @@ function App() {
           left: `${e.pageX - 28}px`,
         },
       };
-
+      setClickPos({ top: e.pageY, left: e.pageX });
       setDropDownPosition(position);
       setDropDownDisplay('block');
       setCursor('default');
@@ -77,22 +76,40 @@ function App() {
     setCursor('pointer');
 
     const selection = e.target.textContent.toLowerCase();
-    checkTarget(selection);
+    if (names.includes(selection)) {
+      const doc = document.querySelector(`#${selection}`);
+      const range = { topRange: doc.clientHeight, leftRange: doc.clientWidth };
+      checkTarget(selection, range);
+    }
   };
 
-  const clickTarget = (e) => {
-    e.stopPropagation();
+  const checkTarget = async (selection, range) => {
+    // API fetch
+    const postData = {
+      selection: selection,
+      position: clickPos,
+      range: range,
+    };
+    try {
+      const response = await fetch('http://localhost:3000/target/check', {
+        mode: 'cors',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData),
+      });
+      const data = await response.json();
+      data.result && updateStyle(data.position);
+    } catch (err) {
+      console.error(err);
+    }
 
-    setOnTarget(e.target.id);
-
-    showDropDown(e);
-  };
-
-  const checkTarget = (selection) => {
-    if (selection === onTarget) {
+    function updateStyle(position) {
       const newTargetbox = {
-        ...hitboxes[selection],
         border: '3px solid cyan',
+        top: position.top,
+        left: position.left,
       };
       const newHitboxes = { ...hitboxes, [selection]: newTargetbox };
       setHitboxes(newHitboxes);
@@ -147,14 +164,7 @@ function App() {
       <div className={styles.title}>{"Where're They?"}</div>
       {names.map((name) => {
         const position = hitboxes[name];
-        return (
-          <Target
-            key={name}
-            name={name}
-            position={position}
-            clickTarget={clickTarget}
-          />
-        );
+        return <Target key={name} name={name} position={position} />;
       })}
       <div className={styles.frame}>
         {Album.map((peguin) => {
@@ -181,7 +191,6 @@ function App() {
         setScore={setScore}
       />
       <Popup style={popupStyles} score={score} />
-      {/* <Highscore show={showTable} /> */}
     </div>
   );
 }
