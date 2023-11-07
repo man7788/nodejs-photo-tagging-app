@@ -2,9 +2,9 @@ const { body, validationResult } = require("express-validator");
 const Target = require("../models/target");
 const asyncHandler = require("express-async-handler");
 
-exports.targets = asyncHandler(async (req, res, next) => {
-  const targets = await Target.find();
-  res.json(targets);
+exports.names = asyncHandler(async (req, res, next) => {
+  const names = await Target.find({}, "name -_id");
+  res.json(names);
 });
 
 exports.create_target = [
@@ -46,3 +46,33 @@ exports.create_target = [
     }
   }),
 ];
+
+exports.check_target = asyncHandler(async (req, res, next) => {
+  const target = await Target.findOne({ name: req.body.selection });
+
+  const re = /\d+/;
+
+  const top = re.exec(target.style.top);
+  const left = re.exec(target.style.left);
+
+  const topLimit = Number(top[0]) + Number(req.body.range.topRange);
+  const leftLimit = Number(left[0]) + Number(req.body.range.leftRange);
+
+  const clickPosTop = Number(req.body.position.top);
+  const clickPosLeft = Number(req.body.position.left);
+
+  // Not only less than limit
+  if (
+    clickPosTop >= top &&
+    clickPosTop <= topLimit &&
+    clickPosLeft >= left &&
+    clickPosLeft <= leftLimit
+  ) {
+    res.json({
+      result: true,
+      position: { top: target.style.top, left: target.style.left },
+    });
+  } else {
+    res.json({ result: false });
+  }
+});
