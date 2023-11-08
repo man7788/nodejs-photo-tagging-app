@@ -1,6 +1,7 @@
 const { body, validationResult } = require("express-validator");
 const Target = require("../models/target");
 const asyncHandler = require("express-async-handler");
+const jwt = require("jsonwebtoken");
 
 exports.names = asyncHandler(async (req, res, next) => {
   const names = await Target.find({}, "name -_id");
@@ -41,8 +42,14 @@ exports.create_target = [
         errors: errors.array(),
       });
     } else {
-      await target.save();
-      res.json(target);
+      jwt.verify(req.token, "secretkey", async (err, authData) => {
+        if (err) {
+          res.sendStatus(403);
+        } else {
+          await target.save();
+          res.json(target);
+        }
+      });
     }
   }),
 ];
