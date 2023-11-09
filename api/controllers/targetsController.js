@@ -47,7 +47,7 @@ exports.create_target = [
           res.sendStatus(403);
         } else {
           await target.save();
-          res.json(target);
+          res.status(201).json(target);
         }
       });
     }
@@ -75,11 +75,11 @@ exports.check_target = asyncHandler(async (req, res, next) => {
     clickPosLeft >= left &&
     clickPosLeft <= leftLimit
   ) {
-    res.json({
+    res.status(201).json({
       result: true,
       position: { top: target.style.top, left: target.style.left },
     });
   } else {
-    res.json({ result: false });
+    res.status(201).json({ result: false });
   }
 });
