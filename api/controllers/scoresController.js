@@ -37,7 +37,7 @@ exports.create_score = [
           res.sendStatus(403);
         } else {
           await score.save();
-          res.json(score);
+          res.status(201).json(score);
         }
       });
     }
