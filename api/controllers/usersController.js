@@ -38,7 +38,7 @@ exports.fetch_token = [
         errors: errors.array(),
       });
     } else {
-      res.json(token);
+      res.status(201).json(token);
     }
   }),
 ];
