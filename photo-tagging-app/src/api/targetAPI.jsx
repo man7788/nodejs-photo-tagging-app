@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
+import apiDomain from './apiDomain';
 
 const useTargets = () => {
   const [targets, setTargets] = useState();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const api = apiDomain();
 
   useEffect(() => {
-    fetch('http://localhost:3000/target/names', { mode: 'cors' })
+    fetch(`${api}/target/names`, { mode: 'cors' })
       .then((response) => {
         if (response.status >= 400) {
           throw new Error('server error');

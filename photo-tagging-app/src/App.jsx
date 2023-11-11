@@ -1,6 +1,7 @@
 import styles from './App.module.css';
 import { useState, useEffect } from 'react';
 import useTargets from './api/targetAPI';
+import apiDomain from './api/apiDomain';
 import Dropdown from './components/Dropdown';
 import Target from './components/Target';
 import Photo from './components/Photo';
@@ -30,6 +31,7 @@ function App() {
   // API fetch
   const { targets, error, loading } = useTargets();
   const [clickPos, setClickPos] = useState({});
+  const api = apiDomain();
 
   // Reorganize fetched data to useState
   useEffect(() => {
@@ -91,7 +93,7 @@ function App() {
       range: range,
     };
     try {
-      const response = await fetch('http://localhost:3000/target/check', {
+      const response = await fetch(`${api}/target/check`, {
         mode: 'cors',
         method: 'POST',
         headers: {

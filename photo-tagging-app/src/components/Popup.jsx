@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
+import apiDomain from '../api/apiDomain';
 import styles from '../styles/Popup.module.css';
 import Highscore from './Highscore';
 
 const Popup = ({ style, score }) => {
+  const api = apiDomain();
+
   const [name, setName] = useState('');
   const [show, setShow] = useState(true);
   const [showTable, setShowTable] = useState(false);
@@ -14,7 +17,7 @@ const Popup = ({ style, score }) => {
   const [token, setToken] = useState('');
 
   useEffect(() => {
-    fetch(`http://localhost:3000/token`, {
+    fetch(`${api}/token`, {
       mode: 'cors',
       method: 'POST',
       headers: {
@@ -53,7 +56,7 @@ const Popup = ({ style, score }) => {
     const scoreObj = { name, time: score };
 
     //API POST
-    fetch(`http://localhost:3000/score/create`, {
+    fetch(`${api}/score/create`, {
       mode: 'cors',
       method: 'POST',
       headers: {

@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
+import apiDomain from '../api/apiDomain';
 import styles from '../styles/Highscore.module.css';
 
 const Highscore = () => {
+  const api = apiDomain();
+
   const [list, setList] = useState([]);
 
   const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:3000/highscore', { mode: 'cors' })
+    fetch(`${api}/highscore`, { mode: 'cors' })
       .then((response) => {
         if (response.status >= 400) {
           throw new Error('server error');
