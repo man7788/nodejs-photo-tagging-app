@@ -52,7 +52,12 @@ const Clock = ({ gameover, setPopupStyles, setScore }) => {
   }, [time]);
 
   return (
-    <div className={styles.Clock} data-testid="clock">
+    <div
+      className={styles.Clock}
+      data-testid="clock"
+      onClick={(e) => {
+        e.stopPropagation();
+      }}>
       {clock}
     </div>
   );
