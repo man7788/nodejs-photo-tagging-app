@@ -49,18 +49,25 @@ function App() {
 
   // Show up click anywhere on picture
   const showDropDown = (e) => {
+    e.stopPropagation();
+
+    const target = e.target.getBoundingClientRect();
+
+    const dropdownY = e.pageY - target.y;
+    const dropdownX = e.pageX - target.x;
+
     if (popupStyles.display === 'none') {
       const position = {
         menu: {
-          top: `${e.pageY + 25}px`,
-          left: `${e.pageX + 25}px`,
+          top: `${dropdownY + 19}px`,
+          left: `${dropdownX + 19}px`,
         },
         box: {
-          top: `${e.pageY - 28}px`,
-          left: `${e.pageX - 28}px`,
+          top: `${dropdownY - 28}px`,
+          left: `${dropdownX - 28}px`,
         },
       };
-      setClickPos({ top: e.pageY, left: e.pageX });
+      setClickPos({ top: dropdownY, left: dropdownX });
       setDropDownPosition(position);
       setDropDownDisplay('block');
       setCursor('default');
@@ -163,12 +170,22 @@ function App() {
       onClick={dropDownDisplay === 'none' ? showDropDown : clickMenu}
       style={{ cursor: cursor }}
       data-testid="App">
-      <div className={styles.title}>{"Where're They?"}</div>
+      <div
+        className={styles.title}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}>
+        {"Where're They?"}
+      </div>
       {names.map((name) => {
         const position = hitboxes[name];
         return <Target key={name} name={name} position={position} />;
       })}
-      <div className={styles.frame}>
+      <div
+        className={styles.frame}
+        onClick={(e) => {
+          e.stopPropagation();
+        }}>
         {Album.map((peguin) => {
           const name = Object.keys(peguin);
           const style = iconStyles[name[0].toLowerCase()];
