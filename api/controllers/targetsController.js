@@ -57,18 +57,15 @@ exports.create_target = [
 exports.check_target = asyncHandler(async (req, res, next) => {
   const target = await Target.findOne({ name: req.body.selection });
 
-  const re = /\d+/;
+  const top = target.style.top;
+  const left = target.style.left;
 
-  const top = re.exec(target.style.top);
-  const left = re.exec(target.style.left);
+  const topLimit = target.style.top + req.body.range.topRange;
+  const leftLimit = target.style.left + req.body.range.leftRange;
 
-  const topLimit = Number(top[0]) + Number(req.body.range.topRange);
-  const leftLimit = Number(left[0]) + Number(req.body.range.leftRange);
+  const clickPosTop = req.body.position.top;
+  const clickPosLeft = req.body.position.left;
 
-  const clickPosTop = Number(req.body.position.top);
-  const clickPosLeft = Number(req.body.position.left);
-
-  // Not only less than limit
   if (
     clickPosTop >= top &&
     clickPosTop <= topLimit &&
