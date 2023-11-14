@@ -6,8 +6,8 @@ const TargetSchema = new Schema({
   name: { type: String, required: true, maxLength: 200 },
   style: {
     border: { type: String, required: true, maxLength: 20 },
-    left: { type: String, required: true, maxLength: 20 },
-    top: { type: String, required: true, maxLength: 20 },
+    left: { type: Number, required: true, max: 8000 },
+    top: { type: Number, required: true, max: 8000 },
   },
 });
 
