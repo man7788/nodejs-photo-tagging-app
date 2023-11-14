@@ -147,6 +147,7 @@ describe('Dropdown menu', () => {
   describe('Control with targets involved', () => {
     describe('Menu control with correct selected name', () => {
       it('should change photo and text styles', async () => {
+        // https://runthatline.com/how-to-mock-fetch-api-with-vitest/
         beforeEach(() => {
           global.fetch.mockReset();
         });
@@ -217,14 +218,12 @@ describe('Dropdown menu', () => {
 });
 
 describe('Pop-up screen', () => {
-  it('should pop up when gameover and display score time', async () => {
-    beforeEach(() => {
-      global.fetch.mockReset();
-      vi.resetModules();
-    });
-
+  beforeEach(() => {
+    global.fetch.mockReset();
+    vi.resetModules();
     vi.useFakeTimers();
-
+  });
+  it('should pop up when gameover and display score time', async () => {
     const user = userEvent.setup();
 
     const fetchedToken = { token: 'token' };
@@ -244,7 +243,6 @@ describe('Pop-up screen', () => {
     render(<App />);
 
     // https://legacy.reactjs.org/docs/testing-recipes.html#timers
-
     const appScreen = screen.getByTestId('App');
     const clock = screen.getByTestId('clock');
 
@@ -257,19 +255,25 @@ describe('Pop-up screen', () => {
     await waitFor(async () => await user.click(appScreen));
     const menuNames0 = await screen.findAllByRole('listitem');
     await act(async () => {
-      await waitFor(async () => await user.click(menuNames0[0]));
+      await act(async () => {
+        await waitFor(async () => await user.click(menuNames0[0]));
+      });
     });
 
     await waitFor(async () => await user.click(appScreen));
     const menuNames1 = await screen.findAllByRole('listitem');
     await act(async () => {
-      await waitFor(async () => await user.click(menuNames1[1]));
+      await act(async () => {
+        await waitFor(async () => await user.click(menuNames1[1]));
+      });
     });
 
     await waitFor(async () => await user.click(appScreen));
     const menuNames2 = await screen.findAllByRole('listitem');
     await act(async () => {
-      await waitFor(async () => await user.click(menuNames2[2]));
+      await act(async () => {
+        await waitFor(async () => await user.click(menuNames2[2]));
+      });
     });
 
     act(() => {
