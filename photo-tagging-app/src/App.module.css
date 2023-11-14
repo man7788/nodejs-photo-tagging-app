@@ -1,6 +1,9 @@
 body {
-  box-sizing: border-box;
   background: rgb(45, 45, 45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   margin: 0;
   padding: 0;
   font-family: sans-serif;
@@ -20,13 +23,14 @@ body {
 
 .title {
   margin: 0;
-  font-size: 4rem;
+  font-size: 3.9rem;
   font-weight: 600;
   color: teal;
 }
 
 .frame {
   display: flex;
+  width: fit-content;
   gap: 20px;
 }
 
