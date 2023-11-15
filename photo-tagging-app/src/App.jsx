@@ -160,9 +160,18 @@ function App() {
   }, [popupStyles]);
 
   if (error)
-    return <h1 className={styles.error}>A network error was encountered</h1>;
+    return (
+      <div className={styles.error}>
+        <h1>A network error was encountered</h1>
+      </div>
+    );
 
-  if (loading) return <h1 className={styles.loading}>Loading...</h1>;
+  if (loading)
+    return (
+      <div className={styles.loading}>
+        <h1>Loading...</h1>
+      </div>
+    );
 
   return (
     <div
