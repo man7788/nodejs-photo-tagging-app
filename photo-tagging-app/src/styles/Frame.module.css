@@ -1,0 +1,5 @@
+.frame {
+  display: flex;
+  width: fit-content;
+  gap: 20px;
+}
