@@ -3,35 +3,38 @@
   background: teal;
   display: none;
   flex-direction: column;
-  justify-content: center;
-  align-self: center;
   color: whitesmoke;
   font-size: 1.2rem;
   font-weight: 600;
   width: 300px;
-  height: 200px;
+  height: fit-content;
 }
 
 .header {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.Popup > form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  line-height: 1.5em;
   margin-top: 1rem;
 }
 
-.Popup > form > button {
-  margin-top: 0.2rem;
+.Popup form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.5em;
+  margin-bottom: 1rem;
+  margin-top: 0.5rem;
 }
 
-.Popup > ul {
+.Popup button {
+  margin-top: 0.2rem;
+  z-index: 999;
+}
+
+.Popup ul {
   list-style-type: none;
   font-size: 0.9rem;
-  align-self: center;
+  margin: 0;
   padding: 0;
 }
