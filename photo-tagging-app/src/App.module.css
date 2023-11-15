@@ -38,7 +38,14 @@ body {
   composes: App;
   color: black;
 }
+
 .loading {
   composes: App;
-  color: teal;
+}
+
+h1 {
+  background: rgba(245, 245, 220, 0.4);
+  color: black;
+  width: fit-content;
+  margin: 0;
 }
