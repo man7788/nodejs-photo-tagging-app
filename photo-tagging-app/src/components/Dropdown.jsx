@@ -1,18 +1,27 @@
 import styles from '../styles/Dropdown.module.css';
 
-const Dropdown = ({ display, position, clickMenu }) => {
-  const itemNames = ['Peter', 'Sam', 'Eric'];
+const Dropdown = ({ display, position, names, clickMenu }) => {
+  const itemNames = names.map((name) => {
+    const upperLetter = name[0].toUpperCase();
+    const lowerString = name.slice(1);
+    const wholeString = upperLetter.concat(lowerString);
+    return wholeString;
+  });
 
-  let menuStyle = { display };
-  let boxStyle = { display };
+  let menuStyle = display;
+  let boxStyle = display;
 
   if (position) {
     menuStyle = {
-      display,
+      display: menuStyle.display,
       top: position.menu.top,
       left: position.menu.left,
     };
-    boxStyle = { display, top: position.box.top, left: position.box.left };
+    boxStyle = {
+      display: boxStyle.display,
+      top: position.box.top,
+      left: position.box.left,
+    };
   }
 
   return (
