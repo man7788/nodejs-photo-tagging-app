@@ -114,21 +114,21 @@ const Popup = ({ style, score }) => {
         data-testid="popup">
         <div className={styles.header} data-testid="popup-header">
           <div>Congraulations!</div>
-          <div>Your Finish Time:</div>
+          <div>Finish Time:</div>
           <div>{score}</div>
         </div>
         <form method="post" onSubmit={onSubmitTask}>
           <label htmlFor="name">Your Name:</label>
           <input onChange={onhandleChange} value={name} type="text" id="name" />
+          {formErrors ? (
+            <ul>
+              {formErrors.map((error) => (
+                <li key={error.msg}>{error.msg}</li>
+              ))}
+            </ul>
+          ) : null}
           <button type="submit">Sumbit Your Score</button>
         </form>
-        {formErrors ? (
-          <ul>
-            {formErrors.map((error) => (
-              <li key={error.msg}>{error.msg}</li>
-            ))}
-          </ul>
-        ) : null}
       </div>
       {showTable ? <Highscore /> : null}
     </div>
