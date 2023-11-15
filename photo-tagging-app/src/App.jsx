@@ -11,9 +11,9 @@ import Clock from './components/Clock';
 
 function App() {
   // Dropdown controls
-  const [dropDownDisplay, setDropDownDisplay] = useState('none');
+  const [dropDownDisplay, setDropDownDisplay] = useState({ display: 'none' });
   const [dropDownPosition, setDropDownPosition] = useState(null);
-  const [cursor, setCursor] = useState('pointer');
+  const [cursor, setCursor] = useState({ cursor: 'pointer' });
 
   // Target controls
   const [names, setNames] = useState([]);
@@ -69,8 +69,8 @@ function App() {
       };
       setClickPos({ top: dropdownY, left: dropdownX });
       setDropDownPosition(position);
-      setDropDownDisplay('block');
-      setCursor('default');
+      setDropDownDisplay({ display: 'block' });
+      setCursor({ cursor: 'default' });
     } else {
       return;
     }
@@ -81,8 +81,8 @@ function App() {
   const clickMenu = (e) => {
     e.stopPropagation();
 
-    setDropDownDisplay('none');
-    setCursor('pointer');
+    setDropDownDisplay({ display: 'none' });
+    setCursor({ cursor: 'pointer' });
 
     const selection = e.target.textContent.toLowerCase();
     if (names.includes(selection)) {
@@ -146,7 +146,7 @@ function App() {
 
   useEffect(() => {
     if (popupStyles.display === 'flex') {
-      setCursor('default');
+      setCursor({ cursor: 'default' });
 
       let newHitboxObj = { ...hitboxes };
       const names = Object.keys(newHitboxObj);
@@ -176,8 +176,8 @@ function App() {
   return (
     <div
       className={styles.App}
-      onClick={dropDownDisplay === 'none' ? showDropDown : clickMenu}
-      style={{ cursor: cursor }}
+      onClick={dropDownDisplay.display === 'none' ? showDropDown : clickMenu}
+      style={cursor}
       data-testid="App">
       <div
         className={styles.title}
@@ -211,6 +211,7 @@ function App() {
       <Dropdown
         display={dropDownDisplay}
         position={dropDownPosition}
+        names={names}
         clickMenu={clickMenu}
       />
       <Clock
