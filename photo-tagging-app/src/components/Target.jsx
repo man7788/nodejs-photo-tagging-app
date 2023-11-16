@@ -6,6 +6,9 @@ const Target = ({ name, position }) => {
       id={name}
       className={styles[name]}
       style={position}
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
       data-testid="target"></div>
   );
 };
