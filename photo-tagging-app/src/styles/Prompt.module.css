@@ -1,0 +1,9 @@
+.prompt {
+  /* border: 3px solid orangered; */
+  background: rgba(255, 255, 255, 0.6);
+  color: orangered;
+  width: 280px;
+  display: none;
+  justify-content: center;
+  margin: 0;
+}
