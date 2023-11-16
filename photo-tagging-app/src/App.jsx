@@ -4,10 +4,9 @@ import useTargets from './api/targetAPI';
 import apiDomain from './api/apiDomain';
 import Dropdown from './components/Dropdown';
 import Target from './components/Target';
-import Photo from './components/Photo';
-import Album from './images/Album';
 import Popup from './components/Popup';
 import Clock from './components/Clock';
+import Frame from './components/Frame';
 
 function App() {
   // Dropdown controls
@@ -18,11 +17,7 @@ function App() {
   // Target controls
   const [names, setNames] = useState([]);
   const [hitboxes, setHitboxes] = useState({});
-  const [iconStyles, setIconStyles] = useState({
-    peter: { filter: 'brightness(100%)' },
-    sam: { filter: 'brightness(100%)' },
-    eric: { filter: 'brightness(100%)' },
-  });
+  const [iconStyles, setIconStyles] = useState({});
 
   //Popup controls
   const [popupStyles, setPopupStyles] = useState({ display: 'none' });
@@ -37,26 +32,31 @@ function App() {
   useEffect(() => {
     const nameList = [];
     const hitboxObj = {};
+    const styleObj = {};
 
     for (const i in targets) {
       nameList.push(targets[i].name);
       hitboxObj[targets[i].name] = { top: '', left: '', border: 'none' };
+      styleObj[targets[i].name] = {
+        [[targets[i].name]]: { filter: 'brightness(100%)' },
+      };
     }
 
     setNames(nameList);
     setHitboxes(hitboxObj);
+    setIconStyles(styleObj);
   }, [targets]);
 
   // Show up click anywhere on picture
   const showDropDown = (e) => {
     e.stopPropagation();
 
-    const target = e.target.getBoundingClientRect();
-
-    const dropdownY = e.pageY - target.y;
-    const dropdownX = e.pageX - target.x;
-
     if (popupStyles.display === 'none') {
+      const target = e.target.getBoundingClientRect();
+
+      const dropdownY = e.pageY - target.y;
+      const dropdownX = e.pageX - target.x;
+
       const position = {
         menu: {
           top: `${dropdownY + 19}px`,
@@ -67,6 +67,7 @@ function App() {
           left: `${dropdownX - 28}px`,
         },
       };
+
       setClickPos({ top: dropdownY, left: dropdownX });
       setDropDownPosition(position);
       setDropDownDisplay({ display: 'block' });
@@ -139,7 +140,7 @@ function App() {
   };
 
   useEffect(() => {
-    if (score.length === Object.keys(Album).length) {
+    if (names?.length && score.length === names.length) {
       setScore(true);
     }
   }, [score]);
@@ -190,24 +191,7 @@ function App() {
         const position = hitboxes[name];
         return <Target key={name} name={name} position={position} />;
       })}
-      <div
-        className={styles.frame}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}>
-        {Album.map((peguin) => {
-          const name = Object.keys(peguin);
-          const style = iconStyles[name[0].toLowerCase()];
-          return (
-            <Photo
-              key={name[0]}
-              photo={peguin[name[0]]}
-              peguin={name[0]}
-              style={style}
-            />
-          );
-        })}
-      </div>
+      <Frame iconStyles={iconStyles} />
       <Dropdown
         display={dropDownDisplay}
         position={dropDownPosition}
