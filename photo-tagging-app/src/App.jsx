@@ -7,6 +7,7 @@ import Target from './components/Target';
 import Popup from './components/Popup';
 import Clock from './components/Clock';
 import Frame from './components/Frame';
+import Prompt from './components/Prompt';
 
 function App() {
   // Dropdown controls
@@ -18,6 +19,7 @@ function App() {
   const [names, setNames] = useState([]);
   const [hitboxes, setHitboxes] = useState({});
   const [iconStyles, setIconStyles] = useState({});
+  const [tryAgain, setTryAgain] = useState(false);
 
   //Popup controls
   const [popupStyles, setPopupStyles] = useState({ display: 'none' });
@@ -50,6 +52,8 @@ function App() {
   // Show up click anywhere on picture
   const showDropDown = (e) => {
     e.stopPropagation();
+
+    setTryAgain(false);
 
     if (popupStyles.display === 'none') {
       const target = e.target.getBoundingClientRect();
@@ -110,7 +114,7 @@ function App() {
         body: JSON.stringify(postData),
       });
       const data = await response.json();
-      data.result && updateStyle(data.position);
+      data.result ? updateStyle(data.position) : setTryAgain(true);
     } catch (err) {
       console.error(err);
     }
@@ -192,6 +196,7 @@ function App() {
         return <Target key={name} name={name} position={position} />;
       })}
       <Frame iconStyles={iconStyles} />
+      <Prompt tryAgain={tryAgain} />
       <Dropdown
         display={dropDownDisplay}
         position={dropDownPosition}
