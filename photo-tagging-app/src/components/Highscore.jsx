@@ -11,7 +11,7 @@ const Highscore = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${api}/highscore`, { mode: 'cors' })
+    fetch(`${api}/score/highscore`, { mode: 'cors' })
       .then((response) => {
         if (response.status >= 400) {
           throw new Error('server error');
