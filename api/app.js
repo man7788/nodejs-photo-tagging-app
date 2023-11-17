@@ -9,6 +9,7 @@ const cors = require("cors");
 
 const indexRouter = require("./routes/index");
 const targetRouter = require("./routes/target");
+const scoreRouter = require("./routes/score");
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/target", targetRouter);
+app.use("/score", scoreRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
