@@ -3,11 +3,11 @@ import { useState, useEffect } from 'react';
 import useTargets from './api/targetAPI';
 import apiDomain from './api/apiDomain';
 import Dropdown from './components/Dropdown';
-import Target from './components/Target';
 import Popup from './components/Popup';
 import Clock from './components/Clock';
 import Frame from './components/Frame';
 import Prompt from './components/Prompt';
+import TargetBoard from './components/TargetBoard';
 
 function App() {
   // Dropdown controls
@@ -17,37 +17,48 @@ function App() {
 
   // Target controls
   const [names, setNames] = useState([]);
-  const [hitboxes, setHitboxes] = useState({});
-  const [iconStyles, setIconStyles] = useState({});
   const [tryAgain, setTryAgain] = useState(false);
+  const [updateTarget, setUpdateTarget] = useState({});
+  const [updateIcon, setUpdateIcon] = useState({});
 
   //Popup controls
   const [popupStyles, setPopupStyles] = useState({ display: 'none' });
   const [score, setScore] = useState([]);
 
   // API fetch
+  // ***** Edit *****
+  // Edit fetch endpoint controller to get target names only
   const { targets, error, loading } = useTargets();
   const [clickPos, setClickPos] = useState({});
   const api = apiDomain();
 
+  // ***** Edit *****
+  // Delete after edit fetch endpoint controller
   // Reorganize fetched data to useState
   useEffect(() => {
     const nameList = [];
-    const hitboxObj = {};
-    const styleObj = {};
 
     for (const i in targets) {
       nameList.push(targets[i].name);
-      hitboxObj[targets[i].name] = { top: '', left: '', border: 'none' };
-      styleObj[targets[i].name] = {
-        [[targets[i].name]]: { filter: 'brightness(100%)' },
-      };
     }
 
     setNames(nameList);
-    setHitboxes(hitboxObj);
-    setIconStyles(styleObj);
   }, [targets]);
+
+  useEffect(() => {
+    if (names?.length && score.length === names.length) {
+      setScore(true);
+    }
+  }, [score]);
+
+  useEffect(() => {
+    if (popupStyles.display === 'flex') {
+      setCursor({ cursor: 'default' });
+
+      const targetData = { gameover: true };
+      setUpdateTarget(targetData);
+    }
+  }, [popupStyles]);
 
   // Show up click anywhere on picture
   const showDropDown = (e) => {
@@ -120,17 +131,11 @@ function App() {
     }
 
     function updateStyle(position) {
-      const newTargetbox = {
-        border: '3px solid cyan',
-        top: position.top,
-        left: position.left,
-      };
-      const newHitboxes = { ...hitboxes, [selection]: newTargetbox };
-      setHitboxes(newHitboxes);
+      const targetData = { position, selection };
+      setUpdateTarget(targetData);
 
-      const newStyle = { color: 'grey', filter: 'brightness(50%)' };
-      const newIconStyles = { ...iconStyles, [selection]: newStyle };
-      setIconStyles(newIconStyles);
+      const iconData = selection;
+      setUpdateIcon(iconData);
       checkScore(selection);
     }
   };
@@ -142,27 +147,6 @@ function App() {
       setScore(newList);
     }
   };
-
-  useEffect(() => {
-    if (names?.length && score.length === names.length) {
-      setScore(true);
-    }
-  }, [score]);
-
-  useEffect(() => {
-    if (popupStyles.display === 'flex') {
-      setCursor({ cursor: 'default' });
-
-      let newHitboxObj = { ...hitboxes };
-      const names = Object.keys(newHitboxObj);
-
-      for (const name of names) {
-        newHitboxObj[name] = { ...newHitboxObj[name], border: 'none' };
-      }
-
-      setHitboxes(newHitboxObj);
-    }
-  }, [popupStyles]);
 
   if (error)
     return (
@@ -191,11 +175,8 @@ function App() {
         }}>
         {"Where're They?"}
       </div>
-      {names.map((name) => {
-        const position = hitboxes[name];
-        return <Target key={name} name={name} position={position} />;
-      })}
-      <Frame iconStyles={iconStyles} />
+      <TargetBoard names={names} updateTarget={updateTarget} />
+      <Frame updateIcon={updateIcon} />
       <Prompt tryAgain={tryAgain} />
       <Dropdown
         display={dropDownDisplay}
