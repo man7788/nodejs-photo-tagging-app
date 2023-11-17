@@ -1,7 +1,7 @@
-import peter from './peter.jpg';
-import sam from './sam.jpg';
-import eric from './eric.jpg';
+import Peter from './peter.jpg';
+import Sam from './sam.jpg';
+import Eric from './eric.jpg';
 
-const Album = [{ ['Peter']: peter }, { ['Sam']: sam }, { ['Eric']: eric }];
+const Album = [{ Peter }, { Sam }, { Eric }];
 
 export default Album;
