@@ -1,7 +1,7 @@
 import styles from '../styles/Clock.module.css';
 import { useState, useEffect } from 'react';
 
-const Clock = ({ gameover, setPopupStyles, setScore }) => {
+const Clock = ({ gameover, setUpdatePopup, setScore }) => {
   const [clock, setClock] = useState();
   const [time, setTime] = useState({ s: 0, m: 0, h: 0 });
 
@@ -46,7 +46,7 @@ const Clock = ({ gameover, setPopupStyles, setScore }) => {
 
       setClock(newClock);
     } else {
-      setPopupStyles({ display: 'flex' });
+      setUpdatePopup({ show: true });
       setScore(clock);
     }
   }, [time]);
