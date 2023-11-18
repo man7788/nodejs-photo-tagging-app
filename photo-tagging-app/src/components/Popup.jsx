@@ -3,11 +3,11 @@ import apiDomain from '../api/apiDomain';
 import styles from '../styles/Popup.module.css';
 import Highscore from './Highscore';
 
-const Popup = ({ style, score }) => {
+const Popup = ({ updatePopup, score }) => {
   const api = apiDomain();
 
+  const [popupStyle, setPopupStyle] = useState({ display: 'none' });
   const [name, setName] = useState('');
-  const [show, setShow] = useState(true);
   const [showTable, setShowTable] = useState(false);
 
   const [serverError, setServerError] = useState(false);
@@ -15,6 +15,12 @@ const Popup = ({ style, score }) => {
   const [loading, setLoading] = useState(true);
 
   const [token, setToken] = useState('');
+
+  useEffect(() => {
+    if (updatePopup && updatePopup.show) {
+      setPopupStyle({ display: 'flex' });
+    }
+  }, [updatePopup]);
 
   useEffect(() => {
     fetch(`${api}/token`, {
@@ -79,7 +85,7 @@ const Popup = ({ style, score }) => {
         }
         console.log('Success:', response);
         setShowTable(true);
-        setShow(false);
+        setPopupStyle({ display: 'none' });
       })
       .catch((error) => {
         if (error && error.message !== 'form validation error') {
@@ -108,10 +114,7 @@ const Popup = ({ style, score }) => {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center' }}>
-      <div
-        className={styles.Popup}
-        style={show ? style : { display: 'none' }}
-        data-testid="popup">
+      <div className={styles.Popup} style={popupStyle} data-testid="popup">
         <div className={styles.header} data-testid="popup-header">
           <div>Congraulations!</div>
           <div>Finish Time:</div>
@@ -130,7 +133,7 @@ const Popup = ({ style, score }) => {
           <button type="submit">Sumbit Your Score</button>
         </form>
       </div>
-      {showTable ? <Highscore /> : null}
+      {showTable && <Highscore />}
     </div>
   );
 };
