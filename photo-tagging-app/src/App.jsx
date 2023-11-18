@@ -11,8 +11,7 @@ import TargetBoard from './components/TargetBoard';
 
 function App() {
   // Dropdown controls
-  const [dropDownDisplay, setDropDownDisplay] = useState({ display: 'none' });
-  const [dropDownPosition, setDropDownPosition] = useState(null);
+  const [updateDropdown, setUpdateDropdown] = useState({});
   const [cursor, setCursor] = useState({ cursor: 'pointer' });
 
   // Target controls
@@ -22,18 +21,14 @@ function App() {
   const [updateIcon, setUpdateIcon] = useState({});
 
   //Popup controls
-  const [popupStyles, setPopupStyles] = useState({ display: 'none' });
+  const [updatePopup, setUpdatePopup] = useState({});
   const [score, setScore] = useState([]);
 
   // API fetch
-  // ***** Edit *****
-  // Edit fetch endpoint controller to get target names only
   const { targets, error, loading } = useTargets();
   const [clickPos, setClickPos] = useState({});
   const api = apiDomain();
 
-  // ***** Edit *****
-  // Delete after edit fetch endpoint controller
   // Reorganize fetched data to useState
   useEffect(() => {
     const nameList = [];
@@ -52,13 +47,13 @@ function App() {
   }, [score]);
 
   useEffect(() => {
-    if (popupStyles.display === 'flex') {
+    if (updatePopup && updatePopup.show) {
       setCursor({ cursor: 'default' });
 
       const targetData = { gameover: true };
       setUpdateTarget(targetData);
     }
-  }, [popupStyles]);
+  }, [updatePopup]);
 
   // Show up click anywhere on picture
   const showDropDown = (e) => {
@@ -66,7 +61,7 @@ function App() {
 
     setTryAgain(false);
 
-    if (popupStyles.display === 'none') {
+    if (!updatePopup.show) {
       const target = e.target.getBoundingClientRect();
 
       const dropdownY = e.pageY - target.y;
@@ -84,8 +79,7 @@ function App() {
       };
 
       setClickPos({ top: dropdownY, left: dropdownX });
-      setDropDownPosition(position);
-      setDropDownDisplay({ display: 'block' });
+      setUpdateDropdown({ position, show: true });
       setCursor({ cursor: 'default' });
     } else {
       return;
@@ -97,7 +91,7 @@ function App() {
   const clickMenu = (e) => {
     e.stopPropagation();
 
-    setDropDownDisplay({ display: 'none' });
+    setUpdateDropdown({ show: false });
     setCursor({ cursor: 'pointer' });
 
     const selection = e.target.textContent.toLowerCase();
@@ -165,7 +159,7 @@ function App() {
   return (
     <div
       className={styles.App}
-      onClick={dropDownDisplay.display === 'none' ? showDropDown : clickMenu}
+      onClick={!updateDropdown.show ? showDropDown : clickMenu}
       style={cursor}
       data-testid="App">
       <div
@@ -179,17 +173,16 @@ function App() {
       <Frame updateIcon={updateIcon} />
       <Prompt tryAgain={tryAgain} />
       <Dropdown
-        display={dropDownDisplay}
-        position={dropDownPosition}
+        updateDropdown={updateDropdown}
         names={names}
         clickMenu={clickMenu}
       />
       <Clock
         gameover={score}
-        setPopupStyles={setPopupStyles}
+        setUpdatePopup={setUpdatePopup}
         setScore={setScore}
       />
-      <Popup style={popupStyles} score={score} />
+      <Popup updatePopup={updatePopup} score={score} />
     </div>
   );
 }
