@@ -1,28 +1,40 @@
 import styles from '../styles/Dropdown.module.css';
+import { useState, useEffect } from 'react';
 
-const Dropdown = ({ display, position, names, clickMenu }) => {
+const Dropdown = ({ updateDropdown, names, clickMenu }) => {
+  const [menuStyle, setMenuStyle] = useState({ display: 'none' });
+  const [boxStyle, setBoxStyle] = useState({ display: 'none' });
+
+  useEffect(() => {
+    if (updateDropdown && updateDropdown.show) {
+      setMenuStyle({
+        top: updateDropdown.position.menu.top,
+        left: updateDropdown.position.menu.left,
+        display: 'flex',
+      });
+      setBoxStyle({
+        top: updateDropdown.position.box.top,
+        left: updateDropdown.position.box.left,
+        display: 'flex',
+      });
+    }
+
+    if (updateDropdown && !updateDropdown.show) {
+      setMenuStyle({
+        display: 'none',
+      });
+      setBoxStyle({
+        display: 'none',
+      });
+    }
+  }, [updateDropdown]);
+
   const itemNames = names.map((name) => {
     const upperLetter = name[0].toUpperCase();
     const lowerString = name.slice(1);
     const wholeString = upperLetter.concat(lowerString);
     return wholeString;
   });
-
-  let menuStyle = display;
-  let boxStyle = display;
-
-  if (position) {
-    menuStyle = {
-      display: menuStyle.display,
-      top: position.menu.top,
-      left: position.menu.left,
-    };
-    boxStyle = {
-      display: boxStyle.display,
-      top: position.box.top,
-      left: position.box.left,
-    };
-  }
 
   return (
     <div className="Dropdown">
