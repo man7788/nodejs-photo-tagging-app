@@ -17,14 +17,14 @@ describe('Popup', () => {
 
     global.fetch = vi.fn().mockResolvedValue(createFetchResponse(fetchedToken));
 
-    const { rerender } = render(<Popup style={{ display: 'none' }} />);
+    const { rerender } = render(<Popup />);
 
     const popup = await screen.findByTestId('popup');
     const popupStyles = getComputedStyle(popup);
 
     expect(popupStyles.display).toBe('none');
 
-    rerender(<Popup style={{ display: 'flex' }} score={'01:01:01'} />);
+    rerender(<Popup updatePopup={{ show: true }} score={'01:01:01'} />);
 
     const popupShow = await screen.findByTestId('popup');
     const popupShowStyles = getComputedStyle(popupShow);
@@ -90,7 +90,7 @@ describe('Popup', () => {
       .mockResolvedValueOnce(createFetchResponse(scoreObj))
       .mockResolvedValueOnce(createFetchResponse(fetchedResponse));
 
-    render(<Popup style={{ display: 'flex' }} score={'01:01:01'} />);
+    render(<Popup updatePopup={{ show: true }} score={'01:01:01'} />);
 
     const input = await screen.findByRole('textbox');
     const button = await screen.findByRole('button');
@@ -173,7 +173,7 @@ describe('Popup', () => {
       .mockResolvedValueOnce(createFetchResponse(scoreObj))
       .mockResolvedValueOnce(createFetchResponse(fetchedResponse));
 
-    render(<Popup />);
+    render(<Popup updatePopup={{ show: true }} />);
 
     const input = await screen.findByRole('textbox');
     const button = await screen.findByRole('button');
