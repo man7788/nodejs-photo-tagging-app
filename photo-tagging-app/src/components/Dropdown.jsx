@@ -10,12 +10,12 @@ const Dropdown = ({ updateDropdown, names, clickMenu }) => {
       setMenuStyle({
         top: updateDropdown.position.menu.top,
         left: updateDropdown.position.menu.left,
-        display: 'flex',
+        display: 'block',
       });
       setBoxStyle({
         top: updateDropdown.position.box.top,
         left: updateDropdown.position.box.left,
-        display: 'flex',
+        display: 'block',
       });
     }
 
