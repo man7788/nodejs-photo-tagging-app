@@ -43,7 +43,7 @@ describe('Clock', () => {
     const mockFn = vi.fn();
 
     const { rerender } = render(
-      <Clock gameover={false} setPopupStyles={mockFn} setScore={mockFn} />,
+      <Clock gameover={false} setUpdatePopup={mockFn} setScore={mockFn} />,
     );
 
     act(() => {
@@ -54,7 +54,7 @@ describe('Clock', () => {
     expect(clock.textContent).toBe('00:00:01');
 
     rerender(
-      <Clock gameover={true} setPopupStyles={mockFn} setScore={mockFn} />,
+      <Clock gameover={true} setUpdatePopup={mockFn} setScore={mockFn} />,
     );
 
     act(() => {
