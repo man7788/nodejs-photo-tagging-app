@@ -24,7 +24,7 @@ const useTargets = () => {
   return { targets, error, loading };
 };
 
-const checkTargetAPI = async (postData, updateStyle, setTryAgain) => {
+const checkTargetAPI = async (postData) => {
   try {
     const response = await fetch(`${api}/target/check`, {
       mode: 'cors',
@@ -34,10 +34,14 @@ const checkTargetAPI = async (postData, updateStyle, setTryAgain) => {
       },
       body: JSON.stringify(postData),
     });
+    if (response.status >= 400) {
+      throw new Error('server error');
+    }
     const data = await response.json();
-    data.result ? updateStyle(data.position) : setTryAgain(true);
+    return data;
   } catch (err) {
-    console.error(err);
+    return { error: err };
   }
 };
+
 export { useTargets, checkTargetAPI };
