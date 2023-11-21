@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import useToken from '../api/tokenAPI';
 import apiDomain from '../api/apiDomain';
 import styles from '../styles/Popup.module.css';
 import Highscore from './Highscore';
 
 const Popup = ({ updatePopup, score }) => {
   const api = apiDomain();
+  const { token, tokenError, tokenLoading } = useToken();
 
   const [popupStyle, setPopupStyle] = useState({ display: 'none' });
   const [name, setName] = useState('');
@@ -12,9 +14,7 @@ const Popup = ({ updatePopup, score }) => {
 
   const [serverError, setServerError] = useState(false);
   const [formErrors, setFormErrors] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  const [token, setToken] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (updatePopup && updatePopup.show) {
@@ -22,36 +22,13 @@ const Popup = ({ updatePopup, score }) => {
     }
   }, [updatePopup]);
 
-  useEffect(() => {
-    fetch(`${api}/token`, {
-      mode: 'cors',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ handler: 'penguins' }),
-    })
-      .then((response) => {
-        if (response.status >= 400) {
-          throw new Error('server error');
-        }
-        return response.json();
-      })
-      .then((response) => {
-        setToken(response.token);
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
   const onhandleChange = (e) => {
     setName(e.target.value);
   };
 
   const onSubmitTask = (e) => {
     e.preventDefault();
+
     submitScore(e);
     setName('');
   };
@@ -96,7 +73,7 @@ const Popup = ({ updatePopup, score }) => {
       .finally(() => setLoading(false));
   };
 
-  if (serverError) {
+  if (serverError || tokenError) {
     return (
       <div>
         <h1>A network error was encountered</h1>
@@ -104,7 +81,7 @@ const Popup = ({ updatePopup, score }) => {
     );
   }
 
-  if (loading) {
+  if (loading || tokenLoading) {
     return (
       <div>
         <h1>Loading...</h1>
