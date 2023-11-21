@@ -1,7 +1,6 @@
 import styles from './App.module.css';
 import { useState, useEffect } from 'react';
 import { useTargets, checkTargetAPI } from './api/targetAPI';
-import apiDomain from './api/apiDomain';
 import Dropdown from './components/Dropdown';
 import Popup from './components/Popup';
 import Clock from './components/Clock';
@@ -27,7 +26,7 @@ function App() {
   // API fetch
   const { targets, error, loading } = useTargets();
   const [clickPos, setClickPos] = useState({});
-  const api = apiDomain();
+  const [serverError, setServerError] = useState(null);
 
   // Reorganize fetched data to useState
   useEffect(() => {
@@ -109,7 +108,17 @@ function App() {
       range: range,
     };
 
-    checkTargetAPI(postData, updateStyle, setTryAgain);
+    const result = await checkTargetAPI(postData);
+
+    if (result && result.result) {
+      updateStyle(result.position);
+    } else {
+      setTryAgain(true);
+    }
+
+    if (result && result.error) {
+      setServerError(true);
+    }
 
     function updateStyle(position) {
       const targetData = { position, selection };
@@ -129,7 +138,7 @@ function App() {
     }
   };
 
-  if (error)
+  if (error || serverError)
     return (
       <div className={styles.error}>
         <h1>A network error was encountered</h1>
