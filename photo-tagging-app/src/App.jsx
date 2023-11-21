@@ -1,6 +1,6 @@
 import styles from './App.module.css';
 import { useState, useEffect } from 'react';
-import useTargets from './api/targetAPI';
+import { useTargets, checkTargetAPI } from './api/targetAPI';
 import apiDomain from './api/apiDomain';
 import Dropdown from './components/Dropdown';
 import Popup from './components/Popup';
@@ -103,26 +103,13 @@ function App() {
   };
 
   const checkTarget = async (selection, range) => {
-    // API fetch
     const postData = {
       selection: selection,
       position: clickPos,
       range: range,
     };
-    try {
-      const response = await fetch(`${api}/target/check`, {
-        mode: 'cors',
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(postData),
-      });
-      const data = await response.json();
-      data.result ? updateStyle(data.position) : setTryAgain(true);
-    } catch (err) {
-      console.error(err);
-    }
+
+    checkTargetAPI(postData, updateStyle, setTryAgain);
 
     function updateStyle(position) {
       const targetData = { position, selection };
