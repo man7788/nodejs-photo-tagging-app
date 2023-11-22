@@ -1,11 +1,10 @@
+import styles from '../styles/Popup.module.css';
 import { useState, useEffect } from 'react';
 import useToken from '../api/tokenAPI';
-import apiDomain from '../api/apiDomain';
-import styles from '../styles/Popup.module.css';
+import { submitScoreAPI } from '../api/scoreAPI';
 import Highscore from './Highscore';
 
 const Popup = ({ updatePopup, score }) => {
-  const api = apiDomain();
   const { token, tokenError, tokenLoading } = useToken();
 
   const [popupStyle, setPopupStyle] = useState({ display: 'none' });
@@ -33,44 +32,21 @@ const Popup = ({ updatePopup, score }) => {
     setName('');
   };
 
-  const submitScore = (e) => {
+  const submitScore = async (e) => {
     e.preventDefault();
 
     const scoreObj = { name, time: score };
 
-    //API POST
-    fetch(`${api}/score/create`, {
-      mode: 'cors',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(scoreObj),
-    })
-      .then((response) => {
-        if (response.status >= 400) {
-          setServerError(true);
-          throw new Error('server error');
-        }
-        return response.json();
-      })
-      .then((response) => {
-        if (response && response.errors) {
-          setFormErrors(response.errors);
-          throw new Error('form validation error');
-        }
-        console.log('Success:', response);
-        setShowTable(true);
-        setPopupStyle({ display: 'none' });
-      })
-      .catch((error) => {
-        if (error && error.message !== 'form validation error') {
-          setServerError(error);
-        }
-        console.error(error);
-      })
-      .finally(() => setLoading(false));
+    const result = await submitScoreAPI(token, scoreObj);
+
+    if (result && result.error === 'server error') {
+      setServerError(true);
+    } else if (result && result.message === 'form validation error') {
+      setFormErrors(result.error);
+    } else {
+      setShowTable(true);
+      setPopupStyle({ display: 'none' });
+    }
   };
 
   if (serverError || tokenError) {
@@ -100,13 +76,13 @@ const Popup = ({ updatePopup, score }) => {
         <form method="post" onSubmit={onSubmitTask}>
           <label htmlFor="name">Your Name:</label>
           <input onChange={onhandleChange} value={name} type="text" id="name" />
-          {formErrors ? (
+          {formErrors && (
             <ul>
               {formErrors.map((error) => (
                 <li key={error.msg}>{error.msg}</li>
               ))}
             </ul>
-          ) : null}
+          )}
           <button type="submit">Sumbit Your Score</button>
         </form>
       </div>
