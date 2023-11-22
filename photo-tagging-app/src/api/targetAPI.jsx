@@ -40,7 +40,8 @@ const checkTargetAPI = async (postData) => {
     const data = await response.json();
     return data;
   } catch (err) {
-    return { error: err };
+    console.error(err);
+    return { error: err.message };
   }
 };
 
