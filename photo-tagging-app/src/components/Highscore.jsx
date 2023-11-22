@@ -1,32 +1,13 @@
-import { useState, useEffect } from 'react';
-import apiDomain from '../api/apiDomain';
 import styles from '../styles/Highscore.module.css';
+import { useHighScore } from '../api/scoreAPI';
 
 const Highscore = () => {
-  const api = apiDomain();
-
-  const [list, setList] = useState([]);
-
-  const [error, setError] = useState();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch(`${api}/score/highscore`, { mode: 'cors' })
-      .then((response) => {
-        if (response.status >= 400) {
-          throw new Error('server error');
-        }
-        return response.json();
-      })
-      .then((response) => setList(response))
-      .catch((error) => setError(error))
-      .finally(() => setLoading(false));
-  }, []);
+  const { list, error, loading } = useHighScore();
 
   if (error) {
     return (
       <div>
-        <p>A network error was encountered</p>
+        <h1>A network error was encountered</h1>
       </div>
     );
   }
@@ -34,7 +15,7 @@ const Highscore = () => {
   if (loading) {
     return (
       <div>
-        <p>Loading...</p>
+        <h1>Loading...</h1>
       </div>
     );
   }
