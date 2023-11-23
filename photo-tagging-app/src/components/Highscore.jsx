@@ -21,7 +21,7 @@ const Highscore = () => {
   }
 
   return (
-    <div className={styles.Highscore}>
+    <div className={styles.Highscore} data-testid="highscore">
       <div className={styles.table}>
         <h2>Top 5 Players</h2>
         <ul>
