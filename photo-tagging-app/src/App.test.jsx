@@ -2,42 +2,27 @@ import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 
-const mock = [
-  {
-    style: {
-      left: '110px',
-      top: '280px',
-    },
-    _id: '65380c60e12b05ea4beb10cf',
-    name: 'peter',
-    __v: 0,
-  },
-  {
-    style: {
-      left: '230px',
-      top: '360px',
-    },
-    _id: '65380c76e12b05ea4beb10d1',
-    name: 'sam',
-    __v: 0,
-  },
-  {
-    style: {
-      left: '350px',
-      top: '320px',
-    },
-    _id: '65380c8ae12b05ea4beb10d3',
-    name: 'eric',
-    __v: 0,
-  },
-];
+afterEach(() => {
+  vi.clearAllMocks();
+});
 
 vi.mock('./api/targetAPI', () => ({
-  __esModule: true,
-  default: () => ({
-    targets: mock,
+  useTargets: vi.fn().mockReturnValue({
+    targets: [{ name: 'peter' }, { name: 'sam' }, { name: 'eric' }],
     error: null,
     loading: false,
+  }),
+  checkTargetAPI: vi.fn().mockReturnValue({
+    result: true,
+    position: { top: 115, left: 282 },
+  }),
+}));
+
+vi.mock('./api/tokenAPI', () => ({
+  default: vi.fn().mockReturnValue({
+    token: { token: 'token' },
+    tokenError: null,
+    tokenLoading: false,
   }),
 }));
 
@@ -130,7 +115,7 @@ describe('Dropdown menu', () => {
       expect(boxStylesShow.display).toBe('block');
       expect(menuStylesShow.display).toBe('block');
 
-      const menuNames = screen.getAllByRole('listitem');
+      const menuNames = await screen.findAllByRole('listitem');
 
       await waitFor(async () => await user.click(menuNames[0]));
 
@@ -147,22 +132,7 @@ describe('Dropdown menu', () => {
   describe('Control with targets involved', () => {
     describe('Menu control with correct selected name', () => {
       it('should change photo and text styles', async () => {
-        // https://runthatline.com/how-to-mock-fetch-api-with-vitest/
-        beforeEach(() => {
-          global.fetch.mockReset();
-        });
-
         const user = userEvent.setup();
-
-        const fetchedData = { result: true, position: { top: '', left: '' } };
-
-        function createFetchResponse(data) {
-          return { json: () => new Promise((resolve) => resolve(data)) };
-        }
-
-        global.fetch = vi
-          .fn()
-          .mockResolvedValue(createFetchResponse(fetchedData));
 
         render(<App />);
 
@@ -182,21 +152,7 @@ describe('Dropdown menu', () => {
       });
 
       it('should highlight correctly selected target', async () => {
-        beforeEach(() => {
-          global.fetch.mockReset();
-        });
-
         const user = userEvent.setup();
-
-        const fetchedData = { result: true, position: { top: '', left: '' } };
-
-        function createFetchResponse(data) {
-          return { json: () => new Promise((resolve) => resolve(data)) };
-        }
-
-        global.fetch = vi
-          .fn()
-          .mockResolvedValue(createFetchResponse(fetchedData));
 
         render(<App />);
 
@@ -219,26 +175,12 @@ describe('Dropdown menu', () => {
 
 describe('Pop-up screen', () => {
   beforeEach(() => {
-    global.fetch.mockReset();
     vi.resetModules();
     vi.useFakeTimers();
   });
+
   it('should pop up when gameover and display score time', async () => {
     const user = userEvent.setup();
-
-    const fetchedToken = { token: 'token' };
-    const fetchedData = { result: true, position: { top: '', left: '' } };
-
-    function createFetchResponse(data) {
-      return { json: () => new Promise((resolve) => resolve(data)) };
-    }
-
-    global.fetch = vi
-      .fn()
-      .mockResolvedValueOnce(createFetchResponse(fetchedToken))
-      .mockResolvedValueOnce(createFetchResponse(fetchedData))
-      .mockResolvedValueOnce(createFetchResponse(fetchedData))
-      .mockResolvedValueOnce(createFetchResponse(fetchedData));
 
     render(<App />);
 
