@@ -24,7 +24,8 @@ const Prompt = ({ tryAgain }) => {
       style={style}
       onClick={(e) => {
         e.stopPropagation();
-      }}>
+      }}
+      data-testid="prompt">
       Try Again!
     </h2>
   );
