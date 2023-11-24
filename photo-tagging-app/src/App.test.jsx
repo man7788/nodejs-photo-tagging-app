@@ -170,6 +170,95 @@ describe('Dropdown menu', () => {
         expect(targetsAfterStyles.border).toBe('3px solid cyan');
       });
     });
+    describe('Menu control with incorrect selected name', () => {
+      beforeEach(() => {
+        vi.useFakeTimers();
+      });
+
+      afterEach(() => {
+        vi.useRealTimers();
+      });
+
+      it('should display try again prompt and hide after 2 seconds', async () => {
+        const user = userEvent.setup();
+
+        const checkTarget = await import('./api/targetAPI');
+        checkTarget.checkTargetAPI = vi.fn().mockReturnValue({ result: false });
+
+        render(<App />);
+
+        const appScreen = screen.getByTestId('App');
+
+        await waitFor(async () => await user.click(appScreen));
+
+        const menuNames = await screen.findAllByRole('listitem');
+
+        await act(async () => {
+          await act(async () => {
+            await waitFor(async () => await user.click(menuNames[0]));
+          });
+        });
+
+        const tryAgain = await screen.findByRole('heading', {
+          name: /Try Again/i,
+        });
+
+        const tryAgainStyle = getComputedStyle(tryAgain);
+
+        expect(tryAgainStyle.display).toBe('flex');
+
+        act(() => {
+          vi.advanceTimersByTime(1000);
+        });
+
+        act(() => {
+          vi.advanceTimersByTime(1000);
+        });
+
+        const tryAgainHide = await screen.findByTestId('prompt');
+
+        const tryAgainHideStyle = getComputedStyle(tryAgainHide);
+
+        expect(tryAgainHideStyle.display).toBe('none');
+      });
+
+      it('should display try again prompt and hide after click on app', async () => {
+        const user = userEvent.setup();
+
+        const checkTarget = await import('./api/targetAPI');
+        checkTarget.checkTargetAPI = vi.fn().mockReturnValue({ result: false });
+
+        render(<App />);
+
+        const appScreen = screen.getByTestId('App');
+
+        await waitFor(async () => await user.click(appScreen));
+
+        const menuNames = await screen.findAllByRole('listitem');
+
+        await act(async () => {
+          await act(async () => {
+            await waitFor(async () => await user.click(menuNames[0]));
+          });
+        });
+
+        const tryAgain = await screen.findByRole('heading', {
+          name: /Try Again/i,
+        });
+
+        const tryAgainStyle = getComputedStyle(tryAgain);
+
+        expect(tryAgainStyle.display).toBe('flex');
+
+        await waitFor(async () => await user.click(appScreen));
+
+        const tryAgainHide = await screen.findByTestId('prompt');
+
+        const tryAgainHideStyle = getComputedStyle(tryAgainHide);
+
+        expect(tryAgainHideStyle.display).toBe('none');
+      });
+    });
   });
 });
 
@@ -181,6 +270,9 @@ describe('Pop-up screen', () => {
 
   it('should pop up when gameover and display score time', async () => {
     const user = userEvent.setup();
+
+    const checkTarget = await import('./api/targetAPI');
+    checkTarget.checkTargetAPI = vi.fn().mockReturnValue({ result: true });
 
     render(<App />);
 
