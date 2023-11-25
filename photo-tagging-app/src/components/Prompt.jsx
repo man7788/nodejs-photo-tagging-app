@@ -1,5 +1,6 @@
 import styles from '../styles/Prompt.module.css';
 import { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 const Prompt = ({ tryAgain }) => {
   const [style, setStyle] = useState({ display: 'none' });
@@ -29,6 +30,10 @@ const Prompt = ({ tryAgain }) => {
       Try Again!
     </h2>
   );
+};
+
+Prompt.propTypes = {
+  tryAgain: PropTypes.bool.isRequired,
 };
 
 export default Prompt;
