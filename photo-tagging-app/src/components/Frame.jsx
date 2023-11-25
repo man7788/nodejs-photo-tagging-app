@@ -1,7 +1,8 @@
 import styles from '../styles/Frame.module.css';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import Album from '../images/Album';
 import Photo from './Photo';
-import { useState, useEffect } from 'react';
 
 const Frame = ({ updateIcon }) => {
   const [iconStyles, setIconStyles] = useState({});
@@ -28,4 +29,9 @@ const Frame = ({ updateIcon }) => {
     </div>
   );
 };
+
+Frame.propTypes = {
+  updateIcon: PropTypes.string.isRequired,
+};
+
 export default Frame;
