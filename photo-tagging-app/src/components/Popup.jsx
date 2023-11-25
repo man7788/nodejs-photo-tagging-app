@@ -1,5 +1,6 @@
 import styles from '../styles/Popup.module.css';
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import useToken from '../api/tokenAPI';
 import { submitScoreAPI } from '../api/scoreAPI';
 import Highscore from './Highscore';
@@ -13,6 +14,7 @@ const Popup = ({ updatePopup, score }) => {
 
   const [serverError, setServerError] = useState(false);
   const [formErrors, setFormErrors] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -89,6 +91,17 @@ const Popup = ({ updatePopup, score }) => {
       {showTable && <Highscore />}
     </div>
   );
+};
+
+Popup.propTypes = {
+  updatePopup: PropTypes.shape({
+    show: PropTypes.bool.isRequired,
+  }).isRequired,
+  score: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.bool,
+    PropTypes.string,
+  ]).isRequired,
 };
 
 export default Popup;
