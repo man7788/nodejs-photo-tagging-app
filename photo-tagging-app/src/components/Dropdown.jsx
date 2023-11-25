@@ -1,5 +1,6 @@
 import styles from '../styles/Dropdown.module.css';
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const Dropdown = ({ updateDropdown, names, clickMenu }) => {
   const [menuStyle, setMenuStyle] = useState({ display: 'none' });
@@ -51,4 +52,23 @@ const Dropdown = ({ updateDropdown, names, clickMenu }) => {
     </div>
   );
 };
+
+Dropdown.propTypes = {
+  updateDropdown: PropTypes.shape({
+    show: PropTypes.bool.isRequired,
+    position: PropTypes.shape({
+      menu: PropTypes.shape({
+        top: PropTypes.string,
+        left: PropTypes.string,
+      }).isRequired,
+      box: PropTypes.shape({
+        top: PropTypes.string,
+        left: PropTypes.string,
+      }).isRequired,
+    }),
+  }),
+  names: PropTypes.array.isRequired,
+  clickMenu: PropTypes.func.isRequired,
+};
+
 export default Dropdown;
