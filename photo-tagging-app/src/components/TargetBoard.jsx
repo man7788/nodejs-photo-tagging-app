@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import Target from './Target';
 
 const TargetBoard = ({ names, updateTarget }) => {
@@ -8,7 +9,7 @@ const TargetBoard = ({ names, updateTarget }) => {
     const hitboxObj = {};
 
     for (const name of names) {
-      hitboxObj[name] = { top: '', left: '' };
+      hitboxObj[name] = { top: 0, left: 0 };
     }
 
     setHitboxes(hitboxObj);
@@ -43,11 +44,22 @@ const TargetBoard = ({ names, updateTarget }) => {
   return (
     <div>
       {names.map((name) => {
-        const position = hitboxes[name];
-        return <Target key={name} name={name} position={position} />;
+        const targetStyle = hitboxes[name];
+        return <Target key={name} name={name} targetStyle={targetStyle} />;
       })}
     </div>
   );
+};
+
+TargetBoard.propTypes = {
+  names: PropTypes.array.isRequired,
+  updateTarget: PropTypes.shape({
+    position: PropTypes.shape({
+      top: PropTypes.number,
+      left: PropTypes.number,
+    }),
+    selection: PropTypes.string,
+  }).isRequired,
 };
 
 export default TargetBoard;
