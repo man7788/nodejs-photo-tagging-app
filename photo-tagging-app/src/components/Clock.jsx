@@ -1,5 +1,6 @@
 import styles from '../styles/Clock.module.css';
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const Clock = ({ gameover, setUpdatePopup, setScore }) => {
   const [clock, setClock] = useState();
@@ -62,4 +63,14 @@ const Clock = ({ gameover, setUpdatePopup, setScore }) => {
     </div>
   );
 };
+
+Clock.propTypes = {
+  gameover: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.bool,
+    PropTypes.string,
+  ]).isRequired,
+  setUpdatePopup: PropTypes.func.isRequired,
+};
+
 export default Clock;
