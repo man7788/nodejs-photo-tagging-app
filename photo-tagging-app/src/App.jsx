@@ -10,17 +10,17 @@ import TargetBoard from './components/TargetBoard';
 
 function App() {
   // Dropdown controls
-  const [updateDropdown, setUpdateDropdown] = useState({});
+  const [updateDropdown, setUpdateDropdown] = useState({ show: false });
   const [cursor, setCursor] = useState({ cursor: 'pointer' });
 
   // Target controls
   const [names, setNames] = useState([]);
   const [tryAgain, setTryAgain] = useState(false);
   const [updateTarget, setUpdateTarget] = useState({});
-  const [updateIcon, setUpdateIcon] = useState({});
+  const [updateIcon, setUpdateIcon] = useState('');
 
   //Popup controls
-  const [updatePopup, setUpdatePopup] = useState({});
+  const [updatePopup, setUpdatePopup] = useState({ show: false });
   const [score, setScore] = useState([]);
 
   // API fetch
