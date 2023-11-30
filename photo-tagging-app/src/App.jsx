@@ -1,5 +1,5 @@
 import styles from './App.module.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTargets, checkTargetAPI } from './api/targetAPI';
 import Dropdown from './components/Dropdown';
 import Popup from './components/Popup';
@@ -7,6 +7,7 @@ import Clock from './components/Clock';
 import Frame from './components/Frame';
 import Prompt from './components/Prompt';
 import TargetBoard from './components/TargetBoard';
+import { targetContext } from './contexts/targetContext';
 
 function App() {
   // Dropdown controls
@@ -18,6 +19,7 @@ function App() {
   const [tryAgain, setTryAgain] = useState(false);
   const [updateTarget, setUpdateTarget] = useState({});
   const [updateIcon, setUpdateIcon] = useState('');
+  const allTargets = useRef({});
 
   //Popup controls
   const [updatePopup, setUpdatePopup] = useState({ show: false });
@@ -95,8 +97,11 @@ function App() {
 
     const selection = e.target.textContent.toLowerCase();
     if (names.includes(selection)) {
-      const doc = document.querySelector(`#${selection}`);
-      const range = { topRange: doc.clientHeight, leftRange: doc.clientWidth };
+      const element = allTargets.current[selection];
+      const range = {
+        topRange: element.clientHeight,
+        leftRange: element.clientWidth,
+      };
       checkTarget(selection, range);
     }
   };
@@ -165,7 +170,9 @@ function App() {
         }}>
         {"Where're They?"}
       </div>
-      <TargetBoard names={names} updateTarget={updateTarget} />
+      <targetContext.Provider value={{ allTargets }}>
+        <TargetBoard names={names} updateTarget={updateTarget} />
+      </targetContext.Provider>
       <Frame updateIcon={updateIcon} />
       <Prompt tryAgain={tryAgain} />
       <Dropdown
