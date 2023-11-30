@@ -1,9 +1,19 @@
+import { useEffect, useRef, useContext } from 'react';
 import styles from '../styles/Target.module.css';
 import PropTypes from 'prop-types';
+import { targetContext } from '../contexts/targetContext';
 
 const Target = ({ name, targetStyle }) => {
+  const targetDom = useRef(null);
+  const { allTargets } = useContext(targetContext);
+
+  useEffect(() => {
+    allTargets.current[name] = targetDom.current;
+  }, []);
+
   return (
     <div
+      ref={targetDom}
       id={name}
       className={styles[name]}
       style={targetStyle}
