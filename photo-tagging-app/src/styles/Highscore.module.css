@@ -1,8 +1,10 @@
 .Highscore {
   border: 3px solid orange;
   background: teal;
-  width: 300px;
   color: whitesmoke;
+  font-size: 0.9rem;
+  position: relative;
+  width: 300px;
 }
 
 .table {
@@ -25,4 +27,27 @@
 
 .table li:last-child {
   padding-bottom: 15px;
+}
+
+.Highscore button {
+  border: none;
+  border-radius: 60px;
+  position: absolute;
+  top: -110px;
+  left: 210px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: teal;
+  width: 10rem;
+  height: 4rem;
+  background: orange;
+  cursor: pointer;
+  margin-top: 1rem;
+  z-index: 999;
+}
+
+.Highscore button:hover {
+  cursor: pointer;
+  background: cyan;
+  color: white;
 }
