@@ -1,0 +1,89 @@
+body {
+  background: rgb(45, 45, 45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.Game {
+  border: 5px solid orange;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  width: 480px;
+  height: 640px;
+  cursor: pointer;
+  background-image: url(../images/penguins.jpg);
+  background-size: 480px 640px;
+}
+
+.title {
+  margin: 0;
+  font-size: 3.9rem;
+  font-weight: 600;
+  color: teal;
+}
+
+.welcome {
+  composes: Game;
+}
+
+.welcomeContainer {
+  background: rgba(245, 245, 245, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: teal;
+  height: 100%;
+  cursor: default;
+}
+
+.welcomeContainer .title {
+  align-self: start;
+}
+
+.welcomeContainer button {
+  border: none;
+  border-radius: 60px;
+  font-size: 2rem;
+  color: teal;
+  width: 8rem;
+  height: 4rem;
+  background: orange;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.welcomeContainer button:hover {
+  cursor: pointer;
+  background: cyan;
+  color: white;
+}
+
+.welcomeContainer img {
+  cursor: pointer;
+  background: cyan;
+  color: white;
+}
+
+.error {
+  composes: Game;
+  color: black;
+}
+
+.loading {
+  composes: Game;
+  color: black;
+}
+
+.error h1,
+.loading h1 {
+  background: rgba(245, 245, 220, 0.4);
+  color: black;
+  width: fit-content;
+  margin: 0;
+}
