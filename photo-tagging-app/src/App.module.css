@@ -9,7 +9,7 @@ body {
   font-family: sans-serif;
 }
 
-.App {
+.home {
   border: 5px solid orange;
   display: flex;
   position: relative;
@@ -22,24 +22,41 @@ body {
 }
 
 .title {
+  background: rgba(245, 245, 245, 0.9);
   margin: 0;
   font-size: 3.9rem;
   font-weight: 600;
   color: teal;
 }
 
-.error {
-  composes: App;
-  color: black;
+.homeContainer {
+  background: rgba(245, 245, 245, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: teal;
+  height: 100%;
+  cursor: default;
 }
 
-.loading {
-  composes: App;
+.homeContainer .title {
+  align-self: start;
 }
 
-h1 {
-  background: rgba(245, 245, 220, 0.4);
-  color: black;
-  width: fit-content;
-  margin: 0;
+.homeContainer button {
+  border: none;
+  border-radius: 60px;
+  font-size: 2rem;
+  color: teal;
+  width: 12rem;
+  height: 4rem;
+  background: orange;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.homeContainer button:hover {
+  cursor: pointer;
+  background: cyan;
+  color: white;
 }
