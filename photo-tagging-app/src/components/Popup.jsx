@@ -72,11 +72,14 @@ const Popup = ({ updatePopup, score }) => {
       <div className={styles.Popup} style={popupStyle} data-testid="popup">
         <div className={styles.header} data-testid="popup-header">
           <div>Congraulations!</div>
+        </div>
+        <div className={styles.score}>
           <div>Finish Time:</div>
           <div>{score}</div>
         </div>
         <form method="post" onSubmit={onSubmitTask}>
-          <label htmlFor="name">Your Name:</label>
+          <div>Submit Your Score</div>
+          <label htmlFor="name">Name:</label>
           <input onChange={onhandleChange} value={name} type="text" id="name" />
           {formErrors && (
             <ul>
@@ -85,7 +88,7 @@ const Popup = ({ updatePopup, score }) => {
               ))}
             </ul>
           )}
-          <button type="submit">Sumbit Your Score</button>
+          <button type="submit">Sumbit</button>
         </form>
       </div>
       {showTable && <Highscore />}
