@@ -3,8 +3,9 @@
   background: teal;
   display: none;
   flex-direction: column;
+  align-items: center;
   color: whitesmoke;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: 600;
   width: 300px;
   height: fit-content;
@@ -14,8 +15,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 2rem;
   line-height: 1.5em;
   margin-top: 1rem;
+}
+
+.score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+  line-height: 1.5em;
 }
 
 .Popup form {
@@ -28,13 +38,32 @@
 }
 
 .Popup button {
-  margin-top: 0.2rem;
+  border: none;
+  border-radius: 60px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: teal;
+  width: 10rem;
+  height: 4rem;
+  background: orange;
+  cursor: pointer;
+  margin-top: 1rem;
   z-index: 999;
 }
 
+.Popup button:hover {
+  cursor: pointer;
+  background: cyan;
+  color: white;
+}
+
+.Popup input {
+  width: 12rem;
+  height: 2rem;
+}
 .Popup ul {
   list-style-type: none;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   margin: 0;
   padding: 0;
 }
