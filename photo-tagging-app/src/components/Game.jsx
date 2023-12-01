@@ -8,6 +8,8 @@ import Frame from './Frame';
 import Prompt from './Prompt';
 import TargetBoard from './TargetBoard';
 import { targetContext } from '../contexts/targetContext';
+import { homeContext } from '../contexts/homeContext';
+import App from '../App';
 
 function Game() {
   // Dropdown controls
@@ -29,6 +31,10 @@ function Game() {
   const { targets, error, loading } = useTargets();
   const [clickPos, setClickPos] = useState({});
   const [serverError, setServerError] = useState(null);
+
+  // Home controls
+  const [showHome, setShowHome] = useState(false);
+  const onShowHome = () => setShowHome(true);
 
   // Reorganize fetched data to useState
   useEffect(() => {
@@ -158,34 +164,42 @@ function Game() {
     );
 
   return (
-    <div
-      className={styles.Game}
-      onClick={!updateDropdown.show ? showDropDown : clickMenu}
-      style={cursor}
-      data-testid="App">
-      <div
-        className={styles.title}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}>
-        {"Where're They?"}
-      </div>
-      <targetContext.Provider value={{ allTargets }}>
-        <TargetBoard names={names} updateTarget={updateTarget} />
-      </targetContext.Provider>
-      <Frame updateIcon={updateIcon} />
-      <Prompt tryAgain={tryAgain} />
-      <Dropdown
-        updateDropdown={updateDropdown}
-        names={names}
-        clickMenu={clickMenu}
-      />
-      <Clock
-        gameover={score}
-        setUpdatePopup={setUpdatePopup}
-        setScore={setScore}
-      />
-      <Popup updatePopup={updatePopup} score={score} />
+    <div>
+      {showHome ? (
+        <App />
+      ) : (
+        <div
+          className={styles.Game}
+          onClick={!updateDropdown.show ? showDropDown : clickMenu}
+          style={cursor}
+          data-testid="App">
+          <div
+            className={styles.title}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}>
+            {"Where're They?"}
+          </div>
+          <targetContext.Provider value={{ allTargets }}>
+            <TargetBoard names={names} updateTarget={updateTarget} />
+          </targetContext.Provider>
+          <Frame updateIcon={updateIcon} />
+          <Prompt tryAgain={tryAgain} />
+          <Dropdown
+            updateDropdown={updateDropdown}
+            names={names}
+            clickMenu={clickMenu}
+          />
+          <Clock
+            gameover={score}
+            setUpdatePopup={setUpdatePopup}
+            setScore={setScore}
+          />
+          <homeContext.Provider value={{ onShowHome }}>
+            <Popup updatePopup={updatePopup} score={score} />
+          </homeContext.Provider>
+        </div>
+      )}
     </div>
   );
 }
