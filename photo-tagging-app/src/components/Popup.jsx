@@ -91,7 +91,7 @@ const Popup = ({ updatePopup, score }) => {
           <button type="submit">Sumbit</button>
         </form>
       </div>
-      {showTable && <Highscore />}
+      {showTable && <Highscore showHomeButton={true} />}
     </div>
   );
 };
