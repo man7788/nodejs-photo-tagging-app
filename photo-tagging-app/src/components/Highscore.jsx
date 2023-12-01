@@ -1,8 +1,12 @@
 import styles from '../styles/Highscore.module.css';
+import { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { useHighScore } from '../api/scoreAPI';
+import { homeContext } from '../contexts/homeContext';
 
-const Highscore = () => {
+const Highscore = ({ showHomeButton }) => {
   const { list, error, loading } = useHighScore();
+  const { onShowHome } = useContext(homeContext);
 
   if (error) {
     return (
@@ -23,7 +27,7 @@ const Highscore = () => {
   return (
     <div className={styles.Highscore} data-testid="highscore">
       <div className={styles.table}>
-        <h2>Top 5 Players</h2>
+        <h1>Top 5 Players</h1>
         <ul>
           {list.map((player) => {
             return (
@@ -34,9 +38,14 @@ const Highscore = () => {
             );
           })}
         </ul>
+        {showHomeButton && <button onClick={onShowHome}>Home</button>}
       </div>
     </div>
   );
+};
+
+Highscore.propTypes = {
+  showHomeButton: PropTypes.bool.isRequired,
 };
 
 export default Highscore;
