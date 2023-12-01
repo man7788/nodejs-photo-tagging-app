@@ -34,7 +34,7 @@ const TargetBoard = ({ names, updateTarget }) => {
       const names = Object.keys(newHitboxObj);
 
       for (const name of names) {
-        newHitboxObj[name] = { ...newHitboxObj[name], border: 'none' };
+        newHitboxObj[name] = { ...newHitboxObj[name], display: 'none' };
       }
 
       setHitboxes(newHitboxObj);
