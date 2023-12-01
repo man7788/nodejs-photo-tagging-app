@@ -33,7 +33,7 @@ function App() {
           )}
           {showHighscore && (
             <div className={styles.homeContainer}>
-              <Highscore />
+              <Highscore showHomeButton={false} />
               <button onClick={onShowHome}>Home</button>
             </div>
           )}
