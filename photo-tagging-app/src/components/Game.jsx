@@ -8,7 +8,6 @@ import Frame from './Frame';
 import Prompt from './Prompt';
 import TargetBoard from './TargetBoard';
 import { targetContext } from '../contexts/targetContext';
-import { homeContext } from '../contexts/homeContext';
 import App from '../App';
 import Home from '../images/home.svg';
 
@@ -196,9 +195,7 @@ function Game() {
             setUpdatePopup={setUpdatePopup}
             setScore={setScore}
           />
-          <homeContext.Provider value={{ onShowHome }}>
-            <Popup updatePopup={updatePopup} score={score} />
-          </homeContext.Provider>
+          <Popup updatePopup={updatePopup} score={score} />
           <button onClick={onShowHome}>
             <img src={Home} className={styles.home}></img>
           </button>
