@@ -1,10 +1,9 @@
 import styles from '../styles/Popup.module.css';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import useToken from '../api/tokenAPI';
 import { submitScoreAPI } from '../api/scoreAPI';
 import Highscore from './Highscore';
-import { homeContext } from '../contexts/homeContext';
 
 const Popup = ({ updatePopup, score }) => {
   const { token, tokenError, tokenLoading } = useToken();
@@ -17,8 +16,6 @@ const Popup = ({ updatePopup, score }) => {
   const [formErrors, setFormErrors] = useState(null);
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false);
-
-  const { onShowHome } = useContext(homeContext);
 
   useEffect(() => {
     if (updatePopup && updatePopup.show) {
@@ -74,7 +71,7 @@ const Popup = ({ updatePopup, score }) => {
     <div style={{ display: 'flex', justifyContent: 'center' }}>
       <div className={styles.Popup} style={popupStyle} data-testid="popup">
         <div className={styles.header} data-testid="popup-header">
-          <div>Congradulations!</div>
+          <div>Congratulations!</div>
         </div>
         <div className={styles.score}>
           <div>Finish Time:</div>
@@ -92,10 +89,9 @@ const Popup = ({ updatePopup, score }) => {
             </ul>
           )}
           <button type="submit">Submit</button>
-          <button onClick={onShowHome}>Home</button>
         </form>
       </div>
-      {showTable && <Highscore showHomeButton={true} />}
+      {showTable && <Highscore />}
     </div>
   );
 };
