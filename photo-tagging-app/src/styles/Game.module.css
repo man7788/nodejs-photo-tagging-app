@@ -28,46 +28,33 @@ body {
   color: teal;
 }
 
-.welcome {
-  composes: Game;
-}
-
-.welcomeContainer {
-  background: rgba(245, 245, 245, 0.9);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: teal;
-  height: 100%;
-  cursor: default;
-}
-
-.welcomeContainer .title {
-  align-self: start;
-}
-
-.welcomeContainer button {
-  border: none;
+.Game > button {
+  border: 2px solid teal;
   border-radius: 60px;
-  font-size: 2rem;
+  position: absolute;
+  top: 582px;
+  left: 270px;
+  font-size: 1rem;
+  font-weight: 600;
   color: teal;
-  width: 8rem;
-  height: 4rem;
+  width: 60px;
+  height: 30px;
   background: orange;
   cursor: pointer;
   margin-top: 1rem;
+  z-index: 999;
 }
 
-.welcomeContainer button:hover {
+.Game > button:hover {
   cursor: pointer;
   background: cyan;
   color: white;
 }
 
-.welcomeContainer img {
-  cursor: pointer;
-  background: cyan;
-  color: white;
+.home {
+  filter: invert(31%) sepia(57%) saturate(1827%) hue-rotate(151deg)
+    brightness(94%) contrast(101%);
+  width: 25px;
 }
 
 .error {
