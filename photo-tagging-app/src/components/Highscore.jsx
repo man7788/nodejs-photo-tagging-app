@@ -1,12 +1,8 @@
 import styles from '../styles/Highscore.module.css';
-import { useContext } from 'react';
-import PropTypes from 'prop-types';
 import { useHighScore } from '../api/scoreAPI';
-import { homeContext } from '../contexts/homeContext';
 
-const Highscore = ({ showHomeButton }) => {
+const Highscore = () => {
   const { list, error, loading } = useHighScore();
-  const { onShowHome } = useContext(homeContext);
 
   if (error) {
     return (
@@ -38,14 +34,9 @@ const Highscore = ({ showHomeButton }) => {
             );
           })}
         </ul>
-        {showHomeButton && <button onClick={onShowHome}>Home</button>}
       </div>
     </div>
   );
-};
-
-Highscore.propTypes = {
-  showHomeButton: PropTypes.bool.isRequired,
 };
 
 export default Highscore;
