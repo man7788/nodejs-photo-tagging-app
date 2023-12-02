@@ -23,6 +23,9 @@ body {
 
 .title {
   background: rgba(245, 245, 245, 0.9);
+  width: 100%;
+  display: flex;
+  justify-content: center;
   margin: 0;
   font-size: 3.9rem;
   font-weight: 600;
