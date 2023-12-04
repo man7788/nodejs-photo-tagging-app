@@ -71,7 +71,7 @@ describe('Popup', () => {
     const popupShowStyles = getComputedStyle(popupShow);
 
     expect(popupShowStyles.display).toBe('flex');
-    expect(popupShow.childNodes[0].childNodes[2].textContent).toBe('01:01:01');
+    expect(popupShow.childNodes[1].childNodes[1].textContent).toBe('01:01:01');
   });
 
   it('should submit highscore with form input', async () => {
