@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 const Clock = ({ gameover, setUpdatePopup, setScore }) => {
   const [clock, setClock] = useState();
   const [time, setTime] = useState({ s: 0, m: 0, h: 0 });
+  const [clockTimeout, setClockTimeout] = useState(null);
 
   const startTime = () => {
     const obj = { ...time };
@@ -24,8 +25,15 @@ const Clock = ({ gameover, setUpdatePopup, setScore }) => {
   };
 
   useEffect(() => {
+    if (gameover === true) {
+      clearTimeout(clockTimeout);
+      setUpdatePopup({ show: true });
+      setScore(clock);
+    }
+  }, [gameover]);
+  useEffect(() => {
     if (gameover !== true) {
-      setTimeout(startTime, 1000);
+      setClockTimeout(setTimeout(startTime, 1000));
 
       let s = time.s;
       let m = time.m;
@@ -46,9 +54,6 @@ const Clock = ({ gameover, setUpdatePopup, setScore }) => {
       const newClock = `${h}:${m}:${s}`;
 
       setClock(newClock);
-    } else {
-      setUpdatePopup({ show: true });
-      setScore(clock);
     }
   }, [time]);
 
