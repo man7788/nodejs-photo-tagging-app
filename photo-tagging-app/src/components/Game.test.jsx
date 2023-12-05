@@ -324,3 +324,21 @@ describe('Pop-up screen', () => {
     expect(scoreTime).toMatch(clockTime);
   });
 });
+
+describe('Home button', () => {
+  it('should render home when clicked', async () => {
+    const user = userEvent.setup();
+
+    render(<Game />);
+
+    const homeButton = screen.getByRole('button');
+
+    await act(async () => {
+      await waitFor(async () => await user.click(homeButton));
+    });
+
+    const heading = await screen.findByRole('heading');
+
+    expect(heading.textContent).toMatch(/Find Them All:/);
+  });
+});
