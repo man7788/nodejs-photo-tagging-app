@@ -12,7 +12,9 @@ afterEach(() => {
 
 describe('Clock', () => {
   it('should display time for each second', async () => {
-    render(<Clock gameover={false} />);
+    render(
+      <Clock gameover={false} setUpdatePopup={() => {}} setScore={() => {}} />,
+    );
 
     const clock0 = await screen.findByTestId('clock');
     expect(clock0.textContent).toBe('00:00:00');
