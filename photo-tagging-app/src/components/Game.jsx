@@ -12,6 +12,11 @@ import App from '../App';
 import Home from '../images/home.svg';
 
 function Game() {
+  // API fetch
+  const { targets, error, loading } = useTargets();
+  const [clickPos, setClickPos] = useState({});
+  const [serverError, setServerError] = useState(null);
+
   // Dropdown controls
   const [updateDropdown, setUpdateDropdown] = useState({ show: false });
   const [cursor, setCursor] = useState({ cursor: 'pointer' });
@@ -27,14 +32,18 @@ function Game() {
   const [updatePopup, setUpdatePopup] = useState({ show: false });
   const [score, setScore] = useState([]);
 
-  // API fetch
-  const { targets, error, loading } = useTargets();
-  const [clickPos, setClickPos] = useState({});
-  const [serverError, setServerError] = useState(null);
-
   // Home controls
   const [showHome, setShowHome] = useState(false);
   const onShowHome = () => setShowHome(true);
+
+  // Time controls
+  const [startTime, setStartTime] = useState(0);
+  const [finishTime, setFinishTime] = useState(0);
+
+  // Record start time
+  useEffect(() => {
+    setStartTime(Date.now());
+  }, [loading]);
 
   // Reorganize fetched data to useState
   useEffect(() => {
@@ -47,12 +56,15 @@ function Game() {
     setNames(nameList);
   }, [targets]);
 
+  // Game over and tell clock to stop
   useEffect(() => {
     if (names?.length && score.length === names.length) {
       setScore(true);
+      setFinishTime(Math.floor((Date.now() - startTime) / 1000));
     }
   }, [score]);
 
+  // Set cursor and clear target highlight
   useEffect(() => {
     if (updatePopup && updatePopup.show) {
       setCursor({ cursor: 'default' });
@@ -195,7 +207,11 @@ function Game() {
             setUpdatePopup={setUpdatePopup}
             setScore={setScore}
           />
-          <Popup updatePopup={updatePopup} score={score} />
+          <Popup
+            updatePopup={updatePopup}
+            finishTime={finishTime}
+            clock={score}
+          />
           <button onClick={onShowHome}>
             <img src={Home} className={styles.home}></img>
           </button>
