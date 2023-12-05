@@ -5,7 +5,7 @@ import useToken from '../api/tokenAPI';
 import { submitScoreAPI } from '../api/scoreAPI';
 import Highscore from './Highscore';
 
-const Popup = ({ updatePopup, score }) => {
+const Popup = ({ updatePopup, finishTime, clock }) => {
   const { token, tokenError, tokenLoading } = useToken();
 
   const [popupStyle, setPopupStyle] = useState({ display: 'none' });
@@ -37,7 +37,7 @@ const Popup = ({ updatePopup, score }) => {
   const submitScore = async (e) => {
     e.preventDefault();
 
-    const scoreObj = { name, time: score };
+    const scoreObj = { name, time: finishTime };
 
     const result = await submitScoreAPI(token, scoreObj);
 
@@ -75,7 +75,7 @@ const Popup = ({ updatePopup, score }) => {
         </div>
         <div className={styles.score}>
           <div>Finish Time:</div>
-          <div>{score}</div>
+          <div>{clock}</div>
         </div>
         <form method="post" onSubmit={onSubmitTask}>
           <div>Submit Your Score</div>
@@ -100,10 +100,11 @@ Popup.propTypes = {
   updatePopup: PropTypes.shape({
     show: PropTypes.bool.isRequired,
   }).isRequired,
-  score: PropTypes.oneOfType([
+  finishTime: PropTypes.number.isRequired,
+  clock: PropTypes.oneOfType([
+    PropTypes.string,
     PropTypes.array,
     PropTypes.bool,
-    PropTypes.string,
   ]).isRequired,
 };
 
