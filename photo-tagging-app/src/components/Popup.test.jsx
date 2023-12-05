@@ -58,7 +58,9 @@ vi.mock('../api/scoreAPI', () => ({
 
 describe('Popup', () => {
   it('should popup when gameover with score', async () => {
-    const { rerender } = render(<Popup />);
+    const { rerender } = render(
+      <Popup updatePopup={{ show: false }} score={[]} />,
+    );
 
     const popup = await screen.findByTestId('popup');
     const popupStyles = getComputedStyle(popup);
@@ -102,7 +104,7 @@ describe('Popup', () => {
   it('should show highscore after form submit', async () => {
     const user = userEvent.setup();
 
-    render(<Popup updatePopup={{ show: true }} />);
+    render(<Popup updatePopup={{ show: true }} score={[]} />);
 
     const input = await screen.findByRole('textbox');
     const button = await screen.findByRole('button');
