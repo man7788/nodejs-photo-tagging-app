@@ -71,6 +71,7 @@ Clock.propTypes = {
     PropTypes.string,
   ]).isRequired,
   setUpdatePopup: PropTypes.func.isRequired,
+  setScore: PropTypes.func.isRequired,
 };
 
 export default Clock;
