@@ -1,0 +1,129 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`highscore button > home button in highscore should return to home when clicked 1`] = `
+<div>
+  <div>
+    <div
+      class="_home_6dc87e"
+    >
+      <div
+        class="_title_6dc87e"
+      >
+         
+        Where're They?
+      </div>
+      <div
+        class="_homeContainer_6dc87e"
+      >
+        <h1>
+          Find Them All:
+        </h1>
+        <div
+          class="_frame_e244da"
+        >
+          <div
+            class="_Photo_185d34"
+            data-testid="photo"
+          >
+            <img
+              alt="Peter"
+              src="/src/images/peter.jpg"
+            />
+            Peter
+          </div>
+          <div
+            class="_Photo_185d34"
+            data-testid="photo"
+          >
+            <img
+              alt="Sam"
+              src="/src/images/sam.jpg"
+            />
+            Sam
+          </div>
+          <div
+            class="_Photo_185d34"
+            data-testid="photo"
+          >
+            <img
+              alt="Eric"
+              src="/src/images/eric.jpg"
+            />
+            Eric
+          </div>
+        </div>
+        <button>
+          Start
+        </button>
+        <button>
+          Highscore
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`highscore button > home button in highscore should return to home when clicked 2`] = `
+<div>
+  <div>
+    <div
+      class="_home_6dc87e"
+    >
+      <div
+        class="_title_6dc87e"
+      >
+         
+        Where're They?
+      </div>
+      <div
+        class="_homeContainer_6dc87e"
+      >
+        <h1>
+          Find Them All:
+        </h1>
+        <div
+          class="_frame_e244da"
+        >
+          <div
+            class="_Photo_185d34"
+            data-testid="photo"
+          >
+            <img
+              alt="Peter"
+              src="/src/images/peter.jpg"
+            />
+            Peter
+          </div>
+          <div
+            class="_Photo_185d34"
+            data-testid="photo"
+          >
+            <img
+              alt="Sam"
+              src="/src/images/sam.jpg"
+            />
+            Sam
+          </div>
+          <div
+            class="_Photo_185d34"
+            data-testid="photo"
+          >
+            <img
+              alt="Eric"
+              src="/src/images/eric.jpg"
+            />
+            Eric
+          </div>
+        </div>
+        <button>
+          Start
+        </button>
+        <button>
+          Highscore
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

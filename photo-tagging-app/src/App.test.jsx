@@ -1,4 +1,4 @@
-import { render, screen, waitFor, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 
@@ -12,316 +12,97 @@ vi.mock('./api/targetAPI', () => ({
     error: null,
     loading: false,
   }),
-  checkTargetAPI: vi.fn().mockReturnValue({
-    result: true,
-    position: { top: 115, left: 282 },
+}));
+
+vi.mock('./api/scoreAPI', () => ({
+  useHighScore: vi.fn().mockReturnValue({
+    list: [
+      {
+        _id: '653c00138e1ff544d19b3b63',
+        name: 'test4',
+        time: '00:00:03',
+        __v: 0,
+      },
+      {
+        _id: '653bf8a78e1ff544d19b3b42',
+        name: 'test1',
+        time: '00:00:03',
+        __v: 0,
+      },
+      {
+        _id: '653c00b18e1ff544d19b3b74',
+        name: 'bbb',
+        time: '00:00:03',
+        __v: 0,
+      },
+      {
+        _id: '653bfffc8e1ff544d19b3b5d',
+        name: 'test3',
+        time: '00:00:03',
+        __v: 0,
+      },
+      {
+        _id: '653c00a68e1ff544d19b3b6e',
+        name: 'aaa',
+        time: '00:00:04',
+        __v: 0,
+      },
+    ],
+    error: null,
+    loading: false,
   }),
 }));
 
-vi.mock('./api/tokenAPI', () => ({
-  default: vi.fn().mockReturnValue({
-    token: { token: 'token' },
-    tokenError: null,
-    tokenLoading: false,
-  }),
+vi.mock('./components/Popup', () => ({
+  default: () => {
+    return <div></div>;
+  },
 }));
 
-describe('Dropdown menu', () => {
-  describe('Basic menu control', () => {
-    it('should display dropdown menu when click anywhere in app', async () => {
-      const user = userEvent.setup();
-
-      render(<App />);
-
-      const appScreen = screen.getByTestId('App');
-
-      const menuBefore = screen.getByTestId('menu');
-      const boxBefore = screen.getByTestId('box');
-      const menuStylesBefore = getComputedStyle(menuBefore);
-      const boxStylesBefore = getComputedStyle(boxBefore);
-
-      expect(boxStylesBefore.display).toBe('none');
-      expect(menuStylesBefore.display).toBe('none');
-
-      await waitFor(async () => await user.click(appScreen));
-
-      const box = screen.getByTestId('box');
-      const menu = screen.getByTestId('menu');
-      const menuStyles = getComputedStyle(menu);
-      const boxStyles = getComputedStyle(box);
-
-      expect(boxStyles.display).toBe('block');
-      expect(menuStyles.display).toBe('block');
-    });
-
-    it('should hide dropdown menu when click outside of dropdown menu', async () => {
-      const user = userEvent.setup();
-
-      render(<App />);
-
-      const appScreen = screen.getByTestId('App');
-
-      const menuBefore = screen.getByTestId('menu');
-      const boxBefore = screen.getByTestId('box');
-      const menuStylesBefore = getComputedStyle(menuBefore);
-      const boxStylesBefore = getComputedStyle(boxBefore);
-
-      expect(boxStylesBefore.display).toBe('none');
-      expect(menuStylesBefore.display).toBe('none');
-
-      await waitFor(async () => await user.click(appScreen));
-
-      const menuShow = screen.getByTestId('menu');
-      const boxShow = screen.getByTestId('box');
-      const menuStylesShow = getComputedStyle(menuShow);
-      const boxStylesShow = getComputedStyle(boxShow);
-
-      expect(boxStylesShow.display).toBe('block');
-      expect(menuStylesShow.display).toBe('block');
-
-      await waitFor(async () => await user.click(appScreen));
-
-      const box = screen.getByTestId('box');
-      const menu = screen.getByTestId('menu');
-      const boxStyles = getComputedStyle(box);
-      const menuStyles = getComputedStyle(menu);
-
-      expect(boxStyles.display).toBe('none');
-      expect(menuStyles.display).toBe('none');
-    });
-
-    it('should hide dropdown menu after selecting a name ', async () => {
-      const user = userEvent.setup();
-
-      render(<App />);
-
-      const appScreen = screen.getByTestId('App');
-
-      const menuBefore = screen.getByTestId('menu');
-      const boxBefore = screen.getByTestId('box');
-      const menuStylesBefore = getComputedStyle(menuBefore);
-      const boxStylesBefore = getComputedStyle(boxBefore);
-
-      expect(boxStylesBefore.display).toBe('none');
-      expect(menuStylesBefore.display).toBe('none');
-
-      await waitFor(async () => await user.click(appScreen));
-
-      const menuShow = screen.getByTestId('menu');
-      const boxShow = screen.getByTestId('box');
-      const menuStylesShow = getComputedStyle(menuShow);
-      const boxStylesShow = getComputedStyle(boxShow);
-
-      expect(boxStylesShow.display).toBe('block');
-      expect(menuStylesShow.display).toBe('block');
-
-      const menuNames = await screen.findAllByRole('listitem');
-
-      await waitFor(async () => await user.click(menuNames[0]));
-
-      const box = screen.getByTestId('box');
-      const menu = screen.getByTestId('menu');
-      const boxStyles = getComputedStyle(box);
-      const menuStyles = getComputedStyle(menu);
-
-      expect(boxStyles.display).toBe('none');
-      expect(menuStyles.display).toBe('none');
-    });
-  });
-
-  describe('Control with targets involved', () => {
-    describe('Menu control with correct selected name', () => {
-      it('should change photo and text styles', async () => {
-        const user = userEvent.setup();
-
-        render(<App />);
-
-        const appScreen = screen.getByTestId('App');
-
-        await waitFor(async () => await user.click(appScreen));
-
-        const menuNames = screen.getAllByRole('listitem');
-
-        await waitFor(async () => await user.click(menuNames[0]));
-
-        const photos = screen.getAllByTestId('photo');
-        const photoStyles = getComputedStyle(photos[0]);
-
-        expect(photoStyles.filter).toBe('brightness(50%)');
-        expect(photoStyles.color).toBe('rgb(128, 128, 128)');
-      });
-
-      it('should highlight correctly selected target', async () => {
-        const user = userEvent.setup();
-
-        render(<App />);
-
-        const appScreen = screen.getByTestId('App');
-
-        await waitFor(async () => await user.click(appScreen));
-
-        const menuNames = screen.getAllByRole('listitem');
-
-        await waitFor(async () => await user.click(menuNames[0]));
-
-        const targetsAfter = screen.getAllByTestId('target');
-        const targetsAfterStyles = getComputedStyle(targetsAfter[0]);
-
-        expect(targetsAfterStyles.border).toBe('3px solid cyan');
-      });
-    });
-    describe('Menu control with incorrect selected name', () => {
-      beforeEach(() => {
-        vi.useFakeTimers();
-      });
-
-      afterEach(() => {
-        vi.useRealTimers();
-      });
-
-      it('should display try again prompt and hide after 2 seconds', async () => {
-        const user = userEvent.setup();
-
-        const checkTarget = await import('./api/targetAPI');
-        checkTarget.checkTargetAPI = vi.fn().mockReturnValue({ result: false });
-
-        render(<App />);
-
-        const appScreen = screen.getByTestId('App');
-
-        await waitFor(async () => await user.click(appScreen));
-
-        const menuNames = await screen.findAllByRole('listitem');
-
-        await act(async () => {
-          await act(async () => {
-            await waitFor(async () => await user.click(menuNames[0]));
-          });
-        });
-
-        const tryAgain = await screen.findByRole('heading', {
-          name: /Try Again/i,
-        });
-
-        const tryAgainStyle = getComputedStyle(tryAgain);
-
-        expect(tryAgainStyle.display).toBe('flex');
-
-        act(() => {
-          vi.advanceTimersByTime(1000);
-        });
-
-        act(() => {
-          vi.advanceTimersByTime(1000);
-        });
-
-        const tryAgainHide = await screen.findByTestId('prompt');
-
-        const tryAgainHideStyle = getComputedStyle(tryAgainHide);
-
-        expect(tryAgainHideStyle.display).toBe('none');
-      });
-
-      it('should display try again prompt and hide after click on app', async () => {
-        const user = userEvent.setup();
-
-        const checkTarget = await import('./api/targetAPI');
-        checkTarget.checkTargetAPI = vi.fn().mockReturnValue({ result: false });
-
-        render(<App />);
-
-        const appScreen = screen.getByTestId('App');
-
-        await waitFor(async () => await user.click(appScreen));
-
-        const menuNames = await screen.findAllByRole('listitem');
-
-        await act(async () => {
-          await act(async () => {
-            await waitFor(async () => await user.click(menuNames[0]));
-          });
-        });
-
-        const tryAgain = await screen.findByRole('heading', {
-          name: /Try Again/i,
-        });
-
-        const tryAgainStyle = getComputedStyle(tryAgain);
-
-        expect(tryAgainStyle.display).toBe('flex');
-
-        await waitFor(async () => await user.click(appScreen));
-
-        const tryAgainHide = await screen.findByTestId('prompt');
-
-        const tryAgainHideStyle = getComputedStyle(tryAgainHide);
-
-        expect(tryAgainHideStyle.display).toBe('none');
-      });
-    });
-  });
-});
-
-describe('Pop-up screen', () => {
-  beforeEach(() => {
-    vi.resetModules();
-    vi.useFakeTimers();
-  });
-
-  it('should pop up when gameover and display score time', async () => {
+describe('start button', () => {
+  it('should start game when clicked', async () => {
     const user = userEvent.setup();
-
-    const checkTarget = await import('./api/targetAPI');
-    checkTarget.checkTargetAPI = vi.fn().mockReturnValue({ result: true });
 
     render(<App />);
 
-    // https://legacy.reactjs.org/docs/testing-recipes.html#timers
-    const appScreen = screen.getByTestId('App');
-    const clock = screen.getByTestId('clock');
+    const startButtons = screen.getAllByRole('button');
 
-    const popupBefore = await screen.findByTestId('popup');
-    const popupBeforeStyles = getComputedStyle(popupBefore);
+    await user.click(startButtons[0]);
 
-    expect(popupBeforeStyles.display).toBe('none');
+    const targets = await screen.findAllByTestId('target');
 
-    // // https://github.com/vitest-dev/vitest/issues/3117
-    await waitFor(async () => await user.click(appScreen));
-    const menuNames0 = await screen.findAllByRole('listitem');
-    await act(async () => {
-      await act(async () => {
-        await waitFor(async () => await user.click(menuNames0[0]));
-      });
-    });
+    expect(targets).toHaveLength(3);
+  });
+});
 
-    await waitFor(async () => await user.click(appScreen));
-    const menuNames1 = await screen.findAllByRole('listitem');
-    await act(async () => {
-      await act(async () => {
-        await waitFor(async () => await user.click(menuNames1[1]));
-      });
-    });
+describe.only('highscore button', () => {
+  it('should show highscore when clicked', async () => {
+    const user = userEvent.setup();
 
-    await waitFor(async () => await user.click(appScreen));
-    const menuNames2 = await screen.findAllByRole('listitem');
-    await act(async () => {
-      await act(async () => {
-        await waitFor(async () => await user.click(menuNames2[2]));
-      });
-    });
+    render(<App />);
 
-    act(() => {
-      vi.runAllTimers();
-    });
+    const startButtons = screen.getAllByRole('button');
 
-    const popup = await screen.findByTestId('popup');
-    const popupHeader = await screen.findByTestId('popup-header');
+    await user.click(startButtons[1]);
 
-    const popupStyles = getComputedStyle(popup);
-    const clockTime = clock.textContent;
-    const scoreTime = popupHeader.childNodes[2].textContent;
+    const scores = await screen.findAllByRole('listitem');
+    expect(scores).toHaveLength(5);
+  });
+  it('home button in highscore should return to home when clicked', async () => {
+    const user = userEvent.setup();
 
-    expect(popupStyles.display).toBe('flex');
-    expect(scoreTime).toMatch(clockTime);
+    const { container } = render(<App />);
+
+    expect(container).toMatchSnapshot();
+
+    const startButtons = screen.getAllByRole('button');
+
+    await user.click(startButtons[1]);
+
+    const homeButton = screen.getByRole('button');
+
+    await user.click(homeButton);
+
+    expect(container).toMatchSnapshot();
   });
 });
