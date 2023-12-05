@@ -59,7 +59,7 @@ vi.mock('../api/scoreAPI', () => ({
 describe('Popup', () => {
   it('should popup when gameover with score', async () => {
     const { rerender } = render(
-      <Popup updatePopup={{ show: false }} score={[]} />,
+      <Popup updatePopup={{ show: false }} finishTime={123} clock={[]} />,
     );
 
     const popup = await screen.findByTestId('popup');
@@ -67,7 +67,13 @@ describe('Popup', () => {
 
     expect(popupStyles.display).toBe('none');
 
-    rerender(<Popup updatePopup={{ show: true }} score={'01:01:01'} />);
+    rerender(
+      <Popup
+        updatePopup={{ show: true }}
+        finishTime={123}
+        clock={'01:01:01'}
+      />,
+    );
 
     const popupShow = await screen.findByTestId('popup');
     const popupShowStyles = getComputedStyle(popupShow);
@@ -80,7 +86,13 @@ describe('Popup', () => {
     // https://runthatline.com/how-to-mock-fetch-api-with-vitest/
     const user = userEvent.setup();
 
-    render(<Popup updatePopup={{ show: true }} score={'01:01:01'} />);
+    render(
+      <Popup
+        updatePopup={{ show: true }}
+        finishTime={123}
+        clock={'01:01:01'}
+      />,
+    );
 
     const input = await screen.findByRole('textbox');
     const button = await screen.findByRole('button');
@@ -104,7 +116,7 @@ describe('Popup', () => {
   it('should show highscore after form submit', async () => {
     const user = userEvent.setup();
 
-    render(<Popup updatePopup={{ show: true }} score={[]} />);
+    render(<Popup updatePopup={{ show: true }} finishTime={123} clock={[]} />);
 
     const input = await screen.findByRole('textbox');
     const button = await screen.findByRole('button');
