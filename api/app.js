@@ -6,6 +6,8 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
+const compression = require("compression");
+const helmet = require("helmet");
 
 const indexRouter = require("./routes/index");
 const targetRouter = require("./routes/target");
@@ -33,6 +35,20 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(compression());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
+// Set up rate limiter: maximum of twenty requests per minute
+const RateLimit = require("express-rate-limit");
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 100,
+});
+// Apply rate limiter to all requests
+app.use(limiter);
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
