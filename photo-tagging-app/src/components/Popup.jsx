@@ -1,14 +1,14 @@
 import styles from '../styles/Popup.module.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import useToken from '../api/tokenAPI';
 import { submitScoreAPI } from '../api/scoreAPI';
 import Highscore from './Highscore';
 
-const Popup = ({ updatePopup, finishTime, clock }) => {
+const Popup = ({ finishTime, clock }) => {
   const { token, tokenError, tokenLoading } = useToken();
 
-  const [popupStyle, setPopupStyle] = useState({ display: 'none' });
+  const [popupStyle, setPopupStyle] = useState({ display: 'flex' });
   const [name, setName] = useState('');
   const [showTable, setShowTable] = useState(false);
 
@@ -16,12 +16,6 @@ const Popup = ({ updatePopup, finishTime, clock }) => {
   const [formErrors, setFormErrors] = useState(null);
   // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (updatePopup && updatePopup.show) {
-      setPopupStyle({ display: 'flex' });
-    }
-  }, [updatePopup]);
 
   const onhandleChange = (e) => {
     setName(e.target.value);
@@ -97,9 +91,6 @@ const Popup = ({ updatePopup, finishTime, clock }) => {
 };
 
 Popup.propTypes = {
-  updatePopup: PropTypes.shape({
-    show: PropTypes.bool.isRequired,
-  }).isRequired,
   finishTime: PropTypes.number.isRequired,
   clock: PropTypes.oneOfType([
     PropTypes.string,

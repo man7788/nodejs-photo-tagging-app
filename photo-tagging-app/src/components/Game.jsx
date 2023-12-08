@@ -29,7 +29,7 @@ function Game() {
   const allTargets = useRef({});
 
   //Popup controls
-  const [updatePopup, setUpdatePopup] = useState({ show: false });
+  const [showPopup, setShowPopup] = useState(false);
   const [score, setScore] = useState([]);
 
   // Home controls
@@ -66,13 +66,13 @@ function Game() {
 
   // Set cursor and clear target highlight
   useEffect(() => {
-    if (updatePopup && updatePopup.show) {
+    if (showPopup) {
       setCursor({ cursor: 'default' });
 
       const targetData = { gameover: true };
       setUpdateTarget(targetData);
     }
-  }, [updatePopup]);
+  }, [showPopup]);
 
   // Show up click anywhere on picture
   const showDropDown = (e) => {
@@ -80,7 +80,7 @@ function Game() {
 
     setTryAgain(false);
 
-    if (!updatePopup.show) {
+    if (!showPopup) {
       const target = e.target.getBoundingClientRect();
 
       const dropdownY = e.pageY - target.y;
@@ -204,14 +204,10 @@ function Game() {
           />
           <Clock
             gameover={score}
-            setUpdatePopup={setUpdatePopup}
+            setShowPopup={setShowPopup}
             setScore={setScore}
           />
-          <Popup
-            updatePopup={updatePopup}
-            finishTime={finishTime}
-            clock={score}
-          />
+          {showPopup && <Popup finishTime={finishTime} clock={score} />}
           <button onClick={onShowHome}>
             <img src={Home} className={styles.home}></img>
           </button>

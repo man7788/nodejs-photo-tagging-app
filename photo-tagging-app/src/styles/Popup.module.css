@@ -1,7 +1,7 @@
 .Popup {
   border: 5px solid orange;
   background: teal;
-  display: none;
+  display: flex;
   position: relative;
   flex-direction: column;
   align-items: center;
