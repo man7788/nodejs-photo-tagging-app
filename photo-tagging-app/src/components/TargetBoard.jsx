@@ -6,16 +6,6 @@ const TargetBoard = ({ names, updateTarget }) => {
   const [hitboxes, setHitboxes] = useState({});
 
   useEffect(() => {
-    const hitboxObj = {};
-
-    for (const name of names) {
-      hitboxObj[name] = { top: 0, left: 0 };
-    }
-
-    setHitboxes(hitboxObj);
-  }, [names]);
-
-  useEffect(() => {
     if (updateTarget && updateTarget.position) {
       const newTargetbox = {
         border: '3px solid cyan',
@@ -42,12 +32,12 @@ const TargetBoard = ({ names, updateTarget }) => {
   }, [updateTarget]);
 
   return (
-    <div>
+    <>
       {names.map((name) => {
         const targetStyle = hitboxes[name];
         return <Target key={name} name={name} targetStyle={targetStyle} />;
       })}
-    </div>
+    </>
   );
 };
 
