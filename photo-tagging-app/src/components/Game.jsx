@@ -19,6 +19,7 @@ function Game() {
 
   // Dropdown controls
   const [updateDropdown, setUpdateDropdown] = useState({ show: false });
+  const [showDropdown, setShowDropdown] = useState(false);
   const [cursor, setCursor] = useState({ cursor: 'pointer' });
 
   // Target controls
@@ -75,7 +76,7 @@ function Game() {
   }, [showPopup]);
 
   // Show up click anywhere on picture
-  const showDropDown = (e) => {
+  const onShowDropdown = (e) => {
     e.stopPropagation();
 
     setShowTryAgain(false);
@@ -98,7 +99,8 @@ function Game() {
       };
 
       setClickPos({ top: dropdownY, left: dropdownX });
-      setUpdateDropdown({ position, show: true });
+      setUpdateDropdown({ position });
+      setShowDropdown(true);
       setCursor({ cursor: 'default' });
     } else {
       return;
@@ -110,7 +112,7 @@ function Game() {
   const clickMenu = (e) => {
     e.stopPropagation();
 
-    setUpdateDropdown({ show: false });
+    setShowDropdown(false);
     setCursor({ cursor: 'pointer' });
 
     const selection = e.target.textContent.toLowerCase();
@@ -182,7 +184,7 @@ function Game() {
       ) : (
         <div
           className={styles.Game}
-          onClick={!updateDropdown.show ? showDropDown : clickMenu}
+          onClick={showDropdown ? clickMenu : onShowDropdown}
           style={cursor}
           data-testid="App">
           <div
@@ -197,11 +199,13 @@ function Game() {
           </targetContext.Provider>
           <Frame updateIcon={updateIcon} />
           {showTryAgain && <Prompt />}
-          <Dropdown
-            updateDropdown={updateDropdown}
-            names={names}
-            clickMenu={clickMenu}
-          />
+          {showDropdown && (
+            <Dropdown
+              updateDropdown={updateDropdown}
+              names={names}
+              clickMenu={clickMenu}
+            />
+          )}
           <Clock
             gameover={score}
             setShowPopup={setShowPopup}

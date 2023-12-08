@@ -7,28 +7,17 @@ const Dropdown = ({ updateDropdown, names, clickMenu }) => {
   const [boxStyle, setBoxStyle] = useState({ display: 'none' });
 
   useEffect(() => {
-    if (updateDropdown && updateDropdown.show) {
-      setMenuStyle({
-        top: updateDropdown.position.menu.top,
-        left: updateDropdown.position.menu.left,
-        display: 'block',
-      });
-      setBoxStyle({
-        top: updateDropdown.position.box.top,
-        left: updateDropdown.position.box.left,
-        display: 'block',
-      });
-    }
-
-    if (updateDropdown && !updateDropdown.show) {
-      setMenuStyle({
-        display: 'none',
-      });
-      setBoxStyle({
-        display: 'none',
-      });
-    }
-  }, [updateDropdown]);
+    setMenuStyle({
+      top: updateDropdown.position.menu.top,
+      left: updateDropdown.position.menu.left,
+      display: 'block',
+    });
+    setBoxStyle({
+      top: updateDropdown.position.box.top,
+      left: updateDropdown.position.box.left,
+      display: 'block',
+    });
+  }, []);
 
   const itemNames = names.map((name) => {
     const upperLetter = name[0].toUpperCase();
@@ -55,7 +44,6 @@ const Dropdown = ({ updateDropdown, names, clickMenu }) => {
 
 Dropdown.propTypes = {
   updateDropdown: PropTypes.shape({
-    show: PropTypes.bool.isRequired,
     position: PropTypes.shape({
       menu: PropTypes.shape({
         top: PropTypes.string,
