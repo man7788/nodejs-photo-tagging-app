@@ -56,43 +56,22 @@ vi.mock('../api/scoreAPI', () => ({
   }),
 }));
 
-describe('Popup', () => {
+describe.only('Popup', () => {
   it('should popup when gameover with score', async () => {
-    const { rerender } = render(
-      <Popup updatePopup={{ show: false }} finishTime={123} clock={[]} />,
-    );
+    render(<Popup finishTime={123} clock={'01:01:01'} />);
 
     const popup = await screen.findByTestId('popup');
     const popupStyles = getComputedStyle(popup);
 
-    expect(popupStyles.display).toBe('none');
-
-    rerender(
-      <Popup
-        updatePopup={{ show: true }}
-        finishTime={123}
-        clock={'01:01:01'}
-      />,
-    );
-
-    const popupShow = await screen.findByTestId('popup');
-    const popupShowStyles = getComputedStyle(popupShow);
-
-    expect(popupShowStyles.display).toBe('flex');
-    expect(popupShow.childNodes[1].childNodes[1].textContent).toBe('01:01:01');
+    expect(popupStyles.display).toBe('flex');
+    expect(popup.childNodes[1].childNodes[1].textContent).toBe('01:01:01');
   });
 
   it('should submit highscore with form input', async () => {
     // https://runthatline.com/how-to-mock-fetch-api-with-vitest/
     const user = userEvent.setup();
 
-    render(
-      <Popup
-        updatePopup={{ show: true }}
-        finishTime={123}
-        clock={'01:01:01'}
-      />,
-    );
+    render(<Popup finishTime={123} clock={'01:01:01'} />);
 
     const input = await screen.findByRole('textbox');
     const button = await screen.findByRole('button');
@@ -116,7 +95,7 @@ describe('Popup', () => {
   it('should show highscore after form submit', async () => {
     const user = userEvent.setup();
 
-    render(<Popup updatePopup={{ show: true }} finishTime={123} clock={[]} />);
+    render(<Popup finishTime={123} clock={[]} />);
 
     const input = await screen.findByRole('textbox');
     const button = await screen.findByRole('button');
