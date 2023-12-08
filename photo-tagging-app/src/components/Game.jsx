@@ -23,12 +23,12 @@ function Game() {
 
   // Target controls
   const [names, setNames] = useState([]);
-  const [tryAgain, setTryAgain] = useState(false);
+  const [showTryAgain, setShowTryAgain] = useState(false);
   const [updateTarget, setUpdateTarget] = useState({});
   const [updateIcon, setUpdateIcon] = useState('');
   const allTargets = useRef({});
 
-  //Popup controls
+  // Popup controls
   const [showPopup, setShowPopup] = useState(false);
   const [score, setScore] = useState([]);
 
@@ -78,7 +78,7 @@ function Game() {
   const showDropDown = (e) => {
     e.stopPropagation();
 
-    setTryAgain(false);
+    setShowTryAgain(false);
 
     if (!showPopup) {
       const target = e.target.getBoundingClientRect();
@@ -136,7 +136,7 @@ function Game() {
     if (result && result.result) {
       updateStyle(result.position);
     } else {
-      setTryAgain(true);
+      setShowTryAgain(true);
     }
 
     if (result && result.error) {
@@ -196,7 +196,7 @@ function Game() {
             <TargetBoard names={names} updateTarget={updateTarget} />
           </targetContext.Provider>
           <Frame updateIcon={updateIcon} />
-          <Prompt tryAgain={tryAgain} />
+          {showTryAgain && <Prompt />}
           <Dropdown
             updateDropdown={updateDropdown}
             names={names}

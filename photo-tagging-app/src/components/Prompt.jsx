@@ -1,23 +1,16 @@
 import styles from '../styles/Prompt.module.css';
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 
-const Prompt = ({ tryAgain }) => {
-  const [style, setStyle] = useState({ display: 'none' });
-  const [timeoutId, setTimeouId] = useState('');
+const Prompt = () => {
+  const [style, setStyle] = useState({ display: 'flex' });
 
   useEffect(() => {
-    if (tryAgain) {
-      setStyle({ display: 'flex' });
-      const timeout = setTimeout(() => {
-        setStyle({ display: 'none' });
-      }, 2000);
-      setTimeouId(timeout);
-    } else {
-      clearTimeout(timeoutId);
+    const timeout = setTimeout(() => {
       setStyle({ display: 'none' });
-    }
-  }, [tryAgain]);
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <h2
@@ -30,10 +23,6 @@ const Prompt = ({ tryAgain }) => {
       Try Again!
     </h2>
   );
-};
-
-Prompt.propTypes = {
-  tryAgain: PropTypes.bool.isRequired,
 };
 
 export default Prompt;
