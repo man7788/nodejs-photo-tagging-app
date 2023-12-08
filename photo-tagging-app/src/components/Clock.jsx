@@ -26,8 +26,8 @@ const Clock = ({ gameover, setShowPopup, setScore }) => {
 
   useEffect(() => {
     if (gameover === true) {
+      clearTimeout(clockTimeout);
       setTimeout(() => {
-        clearTimeout(clockTimeout);
         setShowPopup(true);
         setScore(clock);
       }, 500);
