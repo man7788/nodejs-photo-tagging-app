@@ -35,20 +35,18 @@ describe('Dropdown menu', () => {
 
       const appScreen = screen.getByTestId('App');
 
-      const menuBefore = screen.getByTestId('menu');
-      const boxBefore = screen.getByTestId('box');
-      const menuStylesBefore = getComputedStyle(menuBefore);
-      const boxStylesBefore = getComputedStyle(boxBefore);
+      const box = screen.queryByTestId('box');
+      const menu = screen.queryByTestId('menu');
 
-      expect(boxStylesBefore.display).toBe('none');
-      expect(menuStylesBefore.display).toBe('none');
+      expect(box).not.toBeInTheDocument();
+      expect(menu).not.toBeInTheDocument();
 
       await waitFor(async () => await user.click(appScreen));
 
-      const box = screen.getByTestId('box');
-      const menu = screen.getByTestId('menu');
-      const menuStyles = getComputedStyle(menu);
-      const boxStyles = getComputedStyle(box);
+      const boxShow = screen.getByTestId('box');
+      const menuShow = screen.getByTestId('menu');
+      const menuStyles = getComputedStyle(menuShow);
+      const boxStyles = getComputedStyle(boxShow);
 
       expect(boxStyles.display).toBe('block');
       expect(menuStyles.display).toBe('block');
@@ -61,14 +59,6 @@ describe('Dropdown menu', () => {
 
       const appScreen = screen.getByTestId('App');
 
-      const menuBefore = screen.getByTestId('menu');
-      const boxBefore = screen.getByTestId('box');
-      const menuStylesBefore = getComputedStyle(menuBefore);
-      const boxStylesBefore = getComputedStyle(boxBefore);
-
-      expect(boxStylesBefore.display).toBe('none');
-      expect(menuStylesBefore.display).toBe('none');
-
       await waitFor(async () => await user.click(appScreen));
 
       const menuShow = screen.getByTestId('menu');
@@ -81,13 +71,11 @@ describe('Dropdown menu', () => {
 
       await waitFor(async () => await user.click(appScreen));
 
-      const box = screen.getByTestId('box');
-      const menu = screen.getByTestId('menu');
-      const boxStyles = getComputedStyle(box);
-      const menuStyles = getComputedStyle(menu);
+      const box = screen.queryByTestId('box');
+      const menu = screen.queryByTestId('menu');
 
-      expect(boxStyles.display).toBe('none');
-      expect(menuStyles.display).toBe('none');
+      expect(box).not.toBeInTheDocument();
+      expect(menu).not.toBeInTheDocument();
     });
 
     it('should hide dropdown menu after selecting a name ', async () => {
@@ -97,35 +85,17 @@ describe('Dropdown menu', () => {
 
       const appScreen = screen.getByTestId('App');
 
-      const menuBefore = screen.getByTestId('menu');
-      const boxBefore = screen.getByTestId('box');
-      const menuStylesBefore = getComputedStyle(menuBefore);
-      const boxStylesBefore = getComputedStyle(boxBefore);
-
-      expect(boxStylesBefore.display).toBe('none');
-      expect(menuStylesBefore.display).toBe('none');
-
       await waitFor(async () => await user.click(appScreen));
-
-      const menuShow = screen.getByTestId('menu');
-      const boxShow = screen.getByTestId('box');
-      const menuStylesShow = getComputedStyle(menuShow);
-      const boxStylesShow = getComputedStyle(boxShow);
-
-      expect(boxStylesShow.display).toBe('block');
-      expect(menuStylesShow.display).toBe('block');
 
       const menuNames = await screen.findAllByRole('listitem');
 
       await waitFor(async () => await user.click(menuNames[0]));
 
-      const box = screen.getByTestId('box');
-      const menu = screen.getByTestId('menu');
-      const boxStyles = getComputedStyle(box);
-      const menuStyles = getComputedStyle(menu);
+      const box = screen.queryByTestId('box');
+      const menu = screen.queryByTestId('menu');
 
-      expect(boxStyles.display).toBe('none');
-      expect(menuStyles.display).toBe('none');
+      expect(box).not.toBeInTheDocument();
+      expect(menu).not.toBeInTheDocument();
     });
   });
 
@@ -205,7 +175,7 @@ describe('Dropdown menu', () => {
 
         const tryAgainStyle = getComputedStyle(tryAgain);
 
-        expect(tryAgainStyle.display).toBe('flex');
+        expect(tryAgainStyle.display).toBe('block');
 
         act(() => {
           vi.advanceTimersByTime(1000);
@@ -215,11 +185,9 @@ describe('Dropdown menu', () => {
           vi.advanceTimersByTime(1000);
         });
 
-        const tryAgainHide = await screen.findByTestId('prompt');
+        const tryAgainHide = screen.queryByTestId('prompt');
 
-        const tryAgainHideStyle = getComputedStyle(tryAgainHide);
-
-        expect(tryAgainHideStyle.display).toBe('none');
+        expect(tryAgainHide).not.toBeInTheDocument();
       });
 
       it('should display try again prompt and hide after click on app', async () => {
@@ -248,28 +216,27 @@ describe('Dropdown menu', () => {
 
         const tryAgainStyle = getComputedStyle(tryAgain);
 
-        expect(tryAgainStyle.display).toBe('flex');
+        expect(tryAgainStyle.display).toBe('block');
 
         await waitFor(async () => await user.click(appScreen));
 
-        const tryAgainHide = await screen.findByTestId('prompt');
+        const tryAgainHide = screen.queryByTestId('prompt');
 
-        const tryAgainHideStyle = getComputedStyle(tryAgainHide);
-
-        expect(tryAgainHideStyle.display).toBe('none');
+        expect(tryAgainHide).not.toBeInTheDocument();
       });
     });
   });
 });
 
 describe('Pop-up screen', () => {
+  // https://legacy.reactjs.org/docs/testing-recipes.html#timers
+  // // https://github.com/vitest-dev/vitest/issues/3117
   beforeEach(() => {
     vi.resetModules();
     vi.useFakeTimers();
   });
 
   it('should pop up when gameover and display score time', async () => {
-    // vi.spyOn(React, 'useRef').mockReturnValueOnce({ current: { focus } })
     const user = userEvent.setup();
 
     const checkTarget = await import('../api/targetAPI');
@@ -277,16 +244,13 @@ describe('Pop-up screen', () => {
 
     render(<Game />);
 
-    // https://legacy.reactjs.org/docs/testing-recipes.html#timers
     const appScreen = screen.getByTestId('App');
     const clock = screen.getByTestId('clock');
 
-    const popupBefore = await screen.findByTestId('popup');
-    const popupBeforeStyles = getComputedStyle(popupBefore);
+    const popupBefore = screen.queryByTestId('popup');
 
-    expect(popupBeforeStyles.display).toBe('none');
+    expect(popupBefore).not.toBeInTheDocument();
 
-    // // https://github.com/vitest-dev/vitest/issues/3117
     await waitFor(async () => await user.click(appScreen));
     const menuNames0 = await screen.findAllByRole('listitem');
     await act(async () => {
