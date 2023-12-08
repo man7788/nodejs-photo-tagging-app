@@ -1,5 +1,6 @@
 import styles from '../styles/Prompt.module.css';
 import { useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const Prompt = ({ setShowTryAgain }) => {
   useEffect(() => {
@@ -20,6 +21,10 @@ const Prompt = ({ setShowTryAgain }) => {
       Try Again!
     </h2>
   );
+};
+
+Prompt.propTypes = {
+  setShowTryAgain: PropTypes.func.isRequired,
 };
 
 export default Prompt;
