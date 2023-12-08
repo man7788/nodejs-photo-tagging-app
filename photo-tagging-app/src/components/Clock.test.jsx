@@ -45,7 +45,7 @@ describe('Clock', () => {
     const mockFn = vi.fn();
 
     const { rerender } = render(
-      <Clock gameover={false} setUpdatePopup={mockFn} setScore={mockFn} />,
+      <Clock gameover={false} setShowPopup={mockFn} setScore={mockFn} />,
     );
 
     act(() => {
@@ -55,9 +55,7 @@ describe('Clock', () => {
     const clock = await screen.findByTestId('clock');
     expect(clock.textContent).toBe('00:00:01');
 
-    rerender(
-      <Clock gameover={true} setUpdatePopup={mockFn} setScore={mockFn} />,
-    );
+    rerender(<Clock gameover={true} setShowPopup={mockFn} setScore={mockFn} />);
 
     act(() => {
       vi.runAllTimers();
