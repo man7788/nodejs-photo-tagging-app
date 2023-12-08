@@ -178,7 +178,7 @@ function Game() {
     );
 
   return (
-    <div>
+    <>
       {showHome ? (
         <App />
       ) : (
@@ -198,7 +198,7 @@ function Game() {
             <TargetBoard names={names} updateTarget={updateTarget} />
           </targetContext.Provider>
           <Frame updateIcon={updateIcon} />
-          {showTryAgain && <Prompt />}
+          {showTryAgain && <Prompt setShowTryAgain={setShowTryAgain} />}
           {showDropdown && (
             <Dropdown
               updateDropdown={updateDropdown}
@@ -217,7 +217,7 @@ function Game() {
           </button>
         </div>
       )}
-    </div>
+    </>
   );
 }
 

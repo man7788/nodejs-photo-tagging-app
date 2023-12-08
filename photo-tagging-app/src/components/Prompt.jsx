@@ -1,12 +1,10 @@
 import styles from '../styles/Prompt.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-const Prompt = () => {
-  const [style, setStyle] = useState({ display: 'flex' });
-
+const Prompt = ({ setShowTryAgain }) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setStyle({ display: 'none' });
+      setShowTryAgain(false);
     }, 2000);
 
     return () => clearTimeout(timeout);
@@ -15,7 +13,6 @@ const Prompt = () => {
   return (
     <h2
       className={styles.prompt}
-      style={style}
       onClick={(e) => {
         e.stopPropagation();
       }}
