@@ -13,38 +13,30 @@ import Home from '../images/home.svg';
 import manageTargets from '../controls/targetControls';
 import manageDropdown from '../controls/dropdownControls';
 import gameReducer from '../reducers/gameReducer';
+import gameOverReducer from '../reducers/gameOverReducer';
 
 function Game() {
   // Reducers
   const [gameState, gameDispatch] = useReducer(gameReducer, gameDefaultValue);
+  const [gameOverState, gameOverDispatch] = useReducer(
+    gameOverReducer,
+    gameOverDefaultValue,
+  );
 
   // API fetch
   const { targets, error, loading } = useTargets();
 
-  // Dropdown controls
-  const [defaultCursor, setDefaultCursor] = useState(false);
-
   // Target controls
   const [names, setNames] = useState([]);
   const allTargets = useRef({});
-  const [showTargetBoard, setShowTargetBoard] = useState(true);
-
-  // Popup controls
-  const [gameover, setGameOver] = useState(false);
-  const [showPopup, setShowPopup] = useState(false);
-  const [finishClock, setFinishClock] = useState('');
 
   // Home controls
   const [showHome, setShowHome] = useState(false);
   const onShowHome = () => setShowHome(true);
 
-  // Time controls
-  const [startTime, setStartTime] = useState(0);
-  const [finishTime, setFinishTime] = useState(0);
-
   // Record start time
   useEffect(() => {
-    setStartTime(Date.now());
+    gameOverDispatch({ type: 'save_start_time', startTime: Date.now() });
   }, [loading]);
 
   // Reorganize fetched data to useState
@@ -61,21 +53,27 @@ function Game() {
   // Game over and tell clock to stop
   useEffect(() => {
     if (names?.length && gameState.score.length === names.length) {
-      setGameOver(true);
-      setFinishTime(Math.floor((Date.now() - startTime) / 1000));
+      gameOverDispatch({
+        type: 'game_over',
+        gameOver: true,
+        finishTime: Math.floor((Date.now() - gameOverState.startTime) / 1000),
+      });
     }
   }, [gameState.score]);
 
   // Set cursor and clear target highlight
   useEffect(() => {
-    if (showPopup) {
-      setDefaultCursor(true);
-      setShowTargetBoard(false);
+    if (gameOverState.showPopup) {
+      gameOverDispatch({
+        type: 'clear_highlights',
+        defaultCursor: true,
+        showTargetBoard: false,
+      });
     }
-  }, [showPopup]);
+  }, [gameOverState.showPopup]);
 
   const onShowDropdown = (e) => {
-    manageDropdown(e, showPopup, gameDispatch);
+    manageDropdown(e, gameOverState.showPopup, gameDispatch);
   };
 
   const clickMenu = (e) => {
@@ -111,7 +109,11 @@ function Game() {
         <div
           className={styles.Game}
           onClick={gameState.showDropdown ? clickMenu : onShowDropdown}
-          style={defaultCursor ? { cursor: 'default' } : gameState.cursor}
+          style={
+            gameOverState.defaultCursor
+              ? { cursor: 'default' }
+              : gameState.cursor
+          }
           data-testid="App">
           <div
             className={styles.title}
@@ -120,7 +122,7 @@ function Game() {
             }}>
             {"Where're They?"}
           </div>
-          {showTargetBoard && (
+          {gameOverState.showTargetBoard && (
             <targetContext.Provider value={{ allTargets }}>
               <TargetBoard
                 names={names}
@@ -138,12 +140,14 @@ function Game() {
             />
           )}
           <Clock
-            gameover={gameover}
-            setShowPopup={setShowPopup}
-            setFinishClock={setFinishClock}
+            gameOver={gameOverState.gameOver}
+            gameOverDispatch={gameOverDispatch}
           />
-          {showPopup && (
-            <Popup finishTime={finishTime} finishClock={finishClock} />
+          {gameOverState.showPopup && (
+            <Popup
+              finishTime={gameOverState.finishTime}
+              finishClock={gameOverState.finishClock}
+            />
           )}
           <button onClick={onShowHome}>
             <img src={Home} className={styles.home}></img>
@@ -166,4 +170,13 @@ const gameDefaultValue = {
   updateTarget: {},
   updateIcon: '',
   score: [],
+};
+const gameOverDefaultValue = {
+  startTime: 0,
+  gameOver: false,
+  showPopup: false,
+  finishClock: '',
+  finishTime: 0,
+  defaultCursor: false,
+  showTargetBoard: true,
 };
