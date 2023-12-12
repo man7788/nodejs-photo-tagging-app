@@ -12,9 +12,9 @@ afterEach(() => {
 
 describe('Clock', () => {
   it('should display time for each second', async () => {
-    render(
-      <Clock gameover={false} setUpdatePopup={() => {}} setScore={() => {}} />,
-    );
+    const mockFn = vi.fn();
+
+    render(<Clock gameOver={false} gameOverDispatch={mockFn} />);
 
     const clock0 = await screen.findByTestId('clock');
     expect(clock0.textContent).toBe('00:00:00');
@@ -45,7 +45,7 @@ describe('Clock', () => {
     const mockFn = vi.fn();
 
     const { rerender } = render(
-      <Clock gameover={false} setShowPopup={mockFn} setScore={mockFn} />,
+      <Clock gameOver={false} gameOverDispatch={mockFn} />,
     );
 
     act(() => {
@@ -55,7 +55,7 @@ describe('Clock', () => {
     const clock = await screen.findByTestId('clock');
     expect(clock.textContent).toBe('00:00:01');
 
-    rerender(<Clock gameover={true} setShowPopup={mockFn} setScore={mockFn} />);
+    rerender(<Clock gameOver={true} gameOverDispatch={() => {}} />);
 
     act(() => {
       vi.runAllTimers();
