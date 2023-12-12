@@ -2,7 +2,7 @@ import styles from '../styles/Clock.module.css';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-const Clock = ({ gameover, setShowPopup, setFinishClock }) => {
+const Clock = ({ gameOver, gameOverDispatch }) => {
   const [clock, setClock] = useState();
   const [time, setTime] = useState({ s: 0, m: 0, h: 0 });
   const [clockTimeout, setClockTimeout] = useState(null);
@@ -25,17 +25,20 @@ const Clock = ({ gameover, setShowPopup, setFinishClock }) => {
   };
 
   useEffect(() => {
-    if (gameover === true) {
+    if (gameOver === true) {
       clearTimeout(clockTimeout);
       setTimeout(() => {
-        setShowPopup(true);
-        setFinishClock(clock);
+        gameOverDispatch({
+          type: 'show_popup',
+          showPopup: true,
+          finishClock: clock,
+        });
       }, 500);
     }
-  }, [gameover]);
+  }, [gameOver]);
 
   useEffect(() => {
-    if (gameover !== true) {
+    if (gameOver !== true) {
       setClockTimeout(setTimeout(startTime, 1000));
 
       let s = time.s;
@@ -73,13 +76,8 @@ const Clock = ({ gameover, setShowPopup, setFinishClock }) => {
 };
 
 Clock.propTypes = {
-  gameover: PropTypes.oneOfType([
-    PropTypes.array,
-    PropTypes.bool,
-    PropTypes.string,
-  ]).isRequired,
-  setShowPopup: PropTypes.func.isRequired,
-  setFinishClock: PropTypes.func.isRequired,
+  gameOver: PropTypes.bool.isRequired,
+  gameOverDispatch: PropTypes.func.isRequired,
 };
 
 export default Clock;
