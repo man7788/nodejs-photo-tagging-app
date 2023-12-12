@@ -2,7 +2,7 @@ import styles from '../styles/Clock.module.css';
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-const Clock = ({ gameover, setShowPopup, setScore }) => {
+const Clock = ({ gameover, setShowPopup, setFinishClock }) => {
   const [clock, setClock] = useState();
   const [time, setTime] = useState({ s: 0, m: 0, h: 0 });
   const [clockTimeout, setClockTimeout] = useState(null);
@@ -29,7 +29,7 @@ const Clock = ({ gameover, setShowPopup, setScore }) => {
       clearTimeout(clockTimeout);
       setTimeout(() => {
         setShowPopup(true);
-        setScore(clock);
+        setFinishClock(clock);
       }, 500);
     }
   }, [gameover]);
@@ -79,7 +79,7 @@ Clock.propTypes = {
     PropTypes.string,
   ]).isRequired,
   setShowPopup: PropTypes.func.isRequired,
-  setScore: PropTypes.func.isRequired,
+  setFinishClock: PropTypes.func.isRequired,
 };
 
 export default Clock;
