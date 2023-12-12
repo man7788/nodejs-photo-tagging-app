@@ -2,10 +2,10 @@ import styles from '../styles/Prompt.module.css';
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-const Prompt = ({ setShowTryAgain }) => {
+const Prompt = ({ dispatch }) => {
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setShowTryAgain(false);
+      dispatch({ type: 'hide_try_again', showTryAgain: false });
     }, 2000);
 
     return () => clearTimeout(timeout);
@@ -24,7 +24,7 @@ const Prompt = ({ setShowTryAgain }) => {
 };
 
 Prompt.propTypes = {
-  setShowTryAgain: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default Prompt;
