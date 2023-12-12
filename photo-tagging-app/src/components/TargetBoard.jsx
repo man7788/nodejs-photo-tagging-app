@@ -18,17 +18,6 @@ const TargetBoard = ({ names, updateTarget }) => {
       };
       setHitboxes(newHitboxes);
     }
-
-    if (updateTarget && updateTarget.gameover) {
-      let newHitboxObj = { ...hitboxes };
-      const names = Object.keys(newHitboxObj);
-
-      for (const name of names) {
-        newHitboxObj[name] = { ...newHitboxObj[name], display: 'none' };
-      }
-
-      setHitboxes(newHitboxObj);
-    }
   }, [updateTarget]);
 
   return (
