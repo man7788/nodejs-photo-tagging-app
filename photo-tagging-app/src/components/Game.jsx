@@ -1,6 +1,6 @@
 import styles from '../styles/Game.module.css';
-import { useState, useEffect, useRef } from 'react';
-import { useTargets, checkTargetAPI } from '../api/targetAPI';
+import { useState, useEffect, useRef, useReducer } from 'react';
+import { useTargets } from '../api/targetAPI';
 import Dropdown from './Dropdown';
 import Popup from './Popup';
 import Clock from './Clock';
@@ -10,28 +10,29 @@ import TargetBoard from './TargetBoard';
 import { targetContext } from '../contexts/targetContext';
 import App from '../App';
 import Home from '../images/home.svg';
+import manageTargets from '../controls/targetControls';
+import manageDropdown from '../controls/dropdownControls';
+import gameReducer from '../reducers/gameReducer';
 
 function Game() {
+  // Reducers
+  const [gameState, gameDispatch] = useReducer(gameReducer, gameDefaultValue);
+
   // API fetch
   const { targets, error, loading } = useTargets();
-  const [clickPos, setClickPos] = useState({});
-  const [serverError, setServerError] = useState(null);
 
   // Dropdown controls
-  const [updateDropdown, setUpdateDropdown] = useState({ show: false });
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [cursor, setCursor] = useState({ cursor: 'pointer' });
+  const [defaultCursor, setDefaultCursor] = useState(false);
 
   // Target controls
   const [names, setNames] = useState([]);
-  const [showTryAgain, setShowTryAgain] = useState(false);
-  const [updateTarget, setUpdateTarget] = useState({});
-  const [updateIcon, setUpdateIcon] = useState('');
   const allTargets = useRef({});
+  const [showTargetBoard, setShowTargetBoard] = useState(true);
 
   // Popup controls
+  const [gameover, setGameOver] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [score, setScore] = useState([]);
+  const [finishClock, setFinishClock] = useState('');
 
   // Home controls
   const [showHome, setShowHome] = useState(false);
@@ -59,111 +60,36 @@ function Game() {
 
   // Game over and tell clock to stop
   useEffect(() => {
-    if (names?.length && score.length === names.length) {
-      setScore(true);
+    if (names?.length && gameState.score.length === names.length) {
+      setGameOver(true);
       setFinishTime(Math.floor((Date.now() - startTime) / 1000));
     }
-  }, [score]);
+  }, [gameState.score]);
 
   // Set cursor and clear target highlight
   useEffect(() => {
     if (showPopup) {
-      setCursor({ cursor: 'default' });
-
-      const targetData = { gameover: true };
-      setUpdateTarget(targetData);
+      setDefaultCursor(true);
+      setShowTargetBoard(false);
     }
   }, [showPopup]);
 
-  // Show up click anywhere on picture
   const onShowDropdown = (e) => {
-    e.stopPropagation();
-
-    setShowTryAgain(false);
-
-    if (!showPopup) {
-      const target = e.target.getBoundingClientRect();
-
-      const dropdownY = e.pageY - target.y;
-      const dropdownX = e.pageX - target.x;
-
-      const position = {
-        menu: {
-          top: `${dropdownY + 19}px`,
-          left: `${dropdownX + 19}px`,
-        },
-        box: {
-          top: `${dropdownY - 28}px`,
-          left: `${dropdownX - 28}px`,
-        },
-      };
-
-      setClickPos({ top: dropdownY, left: dropdownX });
-      setUpdateDropdown({ position });
-      setShowDropdown(true);
-      setCursor({ cursor: 'default' });
-    } else {
-      return;
-    }
+    manageDropdown(e, showPopup, gameDispatch);
   };
 
-  // (1) Close menu click on menu
-  // (2) Close menu click outside of menu
   const clickMenu = (e) => {
-    e.stopPropagation();
-
-    setShowDropdown(false);
-    setCursor({ cursor: 'pointer' });
-
-    const selection = e.target.textContent.toLowerCase();
-    if (names.includes(selection)) {
-      const element = allTargets.current[selection];
-      const range = {
-        topRange: element.clientHeight,
-        leftRange: element.clientWidth,
-      };
-      checkTarget(selection, range);
-    }
+    manageTargets(
+      e,
+      names,
+      allTargets,
+      gameState.clickPos,
+      gameState.score,
+      gameDispatch,
+    );
   };
 
-  const checkTarget = async (selection, range) => {
-    const postData = {
-      selection: selection,
-      position: clickPos,
-      range: range,
-    };
-
-    const result = await checkTargetAPI(postData);
-
-    if (result && result.result) {
-      updateStyle(result.position);
-    } else {
-      setShowTryAgain(true);
-    }
-
-    if (result && result.error) {
-      setServerError(true);
-    }
-
-    function updateStyle(position) {
-      const targetData = { position, selection };
-      setUpdateTarget(targetData);
-
-      const iconData = selection;
-      setUpdateIcon(iconData);
-      checkScore(selection);
-    }
-  };
-
-  const checkScore = (selection) => {
-    const newList = [...score];
-    if (!score.includes(selection)) {
-      newList.push(selection);
-      setScore(newList);
-    }
-  };
-
-  if (error || serverError)
+  if (error || gameState.serverError)
     return (
       <div className={styles.error}>
         <h1>A network error was encountered</h1>
@@ -184,8 +110,8 @@ function Game() {
       ) : (
         <div
           className={styles.Game}
-          onClick={showDropdown ? clickMenu : onShowDropdown}
-          style={cursor}
+          onClick={gameState.showDropdown ? clickMenu : onShowDropdown}
+          style={defaultCursor ? { cursor: 'default' } : gameState.cursor}
           data-testid="App">
           <div
             className={styles.title}
@@ -194,24 +120,31 @@ function Game() {
             }}>
             {"Where're They?"}
           </div>
-          <targetContext.Provider value={{ allTargets }}>
-            <TargetBoard names={names} updateTarget={updateTarget} />
-          </targetContext.Provider>
-          <Frame updateIcon={updateIcon} />
-          {showTryAgain && <Prompt setShowTryAgain={setShowTryAgain} />}
-          {showDropdown && (
+          {showTargetBoard && (
+            <targetContext.Provider value={{ allTargets }}>
+              <TargetBoard
+                names={names}
+                updateTarget={gameState.updateTarget}
+              />
+            </targetContext.Provider>
+          )}
+          <Frame updateIcon={gameState.updateIcon} />
+          {gameState.showTryAgain && <Prompt dispatch={gameDispatch} />}
+          {gameState.showDropdown && (
             <Dropdown
-              updateDropdown={updateDropdown}
+              updateDropdown={gameState.updateDropdown}
               names={names}
               clickMenu={clickMenu}
             />
           )}
           <Clock
-            gameover={score}
+            gameover={gameover}
             setShowPopup={setShowPopup}
-            setScore={setScore}
+            setFinishClock={setFinishClock}
           />
-          {showPopup && <Popup finishTime={finishTime} clock={score} />}
+          {showPopup && (
+            <Popup finishTime={finishTime} finishClock={finishClock} />
+          )}
           <button onClick={onShowHome}>
             <img src={Home} className={styles.home}></img>
           </button>
@@ -222,3 +155,15 @@ function Game() {
 }
 
 export default Game;
+
+const gameDefaultValue = {
+  showDropdown: false,
+  clickPos: {},
+  serverError: null,
+  updateDropdown: {},
+  cursor: { cursor: 'pointer' },
+  showTryAgain: false,
+  updateTarget: {},
+  updateIcon: '',
+  score: [],
+};
