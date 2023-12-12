@@ -58,7 +58,7 @@ vi.mock('../api/scoreAPI', () => ({
 
 describe.only('Popup', () => {
   it('should popup when gameover with score', async () => {
-    render(<Popup finishTime={123} clock={'01:01:01'} />);
+    render(<Popup finishTime={123} finishClock={'01:01:01'} />);
 
     const popup = await screen.findByTestId('popup');
     const popupStyles = getComputedStyle(popup);
@@ -71,7 +71,7 @@ describe.only('Popup', () => {
     // https://runthatline.com/how-to-mock-fetch-api-with-vitest/
     const user = userEvent.setup();
 
-    render(<Popup finishTime={123} clock={'01:01:01'} />);
+    render(<Popup finishTime={123} finishClock={'01:01:01'} />);
 
     const input = await screen.findByRole('textbox');
     const button = await screen.findByRole('button');
@@ -95,7 +95,7 @@ describe.only('Popup', () => {
   it('should show highscore after form submit', async () => {
     const user = userEvent.setup();
 
-    render(<Popup finishTime={123} clock={[]} />);
+    render(<Popup finishTime={123} finishClock={'01:01:01'} />);
 
     const input = await screen.findByRole('textbox');
     const button = await screen.findByRole('button');
