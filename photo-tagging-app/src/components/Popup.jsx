@@ -5,7 +5,7 @@ import useToken from '../api/tokenAPI';
 import { submitScoreAPI } from '../api/scoreAPI';
 import Highscore from './Highscore';
 
-const Popup = ({ finishTime, clock }) => {
+const Popup = ({ finishTime, finishClock }) => {
   const { token, tokenError, tokenLoading } = useToken();
 
   const [popupStyle, setPopupStyle] = useState({ display: 'flex' });
@@ -69,7 +69,7 @@ const Popup = ({ finishTime, clock }) => {
         </div>
         <div className={styles.score}>
           <div>Finish Time:</div>
-          <div>{clock}</div>
+          <div>{finishClock}</div>
         </div>
         <form method="post" onSubmit={onSubmitTask}>
           <div>Submit Your Score</div>
@@ -92,11 +92,7 @@ const Popup = ({ finishTime, clock }) => {
 
 Popup.propTypes = {
   finishTime: PropTypes.number.isRequired,
-  clock: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.array,
-    PropTypes.bool,
-  ]).isRequired,
+  finishClock: PropTypes.string.isRequired,
 };
 
 export default Popup;
