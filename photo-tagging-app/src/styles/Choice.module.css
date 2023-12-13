@@ -1,0 +1,14 @@
+.Choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: teal;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.Choice > img {
+  border: 3px solid white;
+  width: 80px;
+  cursor: pointer;
+}
