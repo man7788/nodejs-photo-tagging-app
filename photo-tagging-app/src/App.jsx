@@ -1,8 +1,8 @@
 import styles from './App.module.css';
 import { useState } from 'react';
 import Game from './components/Game';
-import Frame from './components/Frame';
 import Highscore from './components/Highscore';
+import Selection from './components/Selection';
 
 function App() {
   const [startGame, setStartGame] = useState(false);
@@ -26,7 +26,7 @@ function App() {
           {!showHighscore && (
             <div className={styles.homeContainer}>
               <h1>Find Them All:</h1>
-              <Frame updateIcon="placeholder" />
+              <Selection />
               <button onClick={onStartGame}>Start</button>
               <button onClick={onShowHighscore}>Highscore</button>
             </div>
