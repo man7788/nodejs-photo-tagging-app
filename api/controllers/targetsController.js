@@ -3,11 +3,6 @@ const Target = require("../models/target");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 
-exports.names = asyncHandler(async (req, res, next) => {
-  const names = await Target.find({}, "name -_id");
-  res.json(names);
-});
-
 exports.create_target = [
   body("name", "Name must not be empty.")
     .trim()
