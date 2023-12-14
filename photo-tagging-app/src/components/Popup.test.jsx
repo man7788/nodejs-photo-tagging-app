@@ -56,9 +56,11 @@ vi.mock('../api/scoreAPI', () => ({
   }),
 }));
 
-describe.only('Popup', () => {
+describe('Popup', () => {
   it('should popup when gameover with score', async () => {
-    render(<Popup finishTime={123} finishClock={'01:01:01'} />);
+    render(
+      <Popup finishTime={123} finishClock={'01:01:01'} showInput={true} />,
+    );
 
     const popup = await screen.findByTestId('popup');
     const popupStyles = getComputedStyle(popup);
@@ -67,11 +69,23 @@ describe.only('Popup', () => {
     expect(popup.childNodes[1].childNodes[1].textContent).toBe('01:01:01');
   });
 
+  it('should not popup when showInput is false', async () => {
+    render(
+      <Popup finishTime={123} finishClock={'01:01:01'} showInput={false} />,
+    );
+
+    const form = screen.queryByRole('form');
+
+    expect(form).not.toBeInTheDocument();
+  });
+
   it('should submit highscore with form input', async () => {
     // https://runthatline.com/how-to-mock-fetch-api-with-vitest/
     const user = userEvent.setup();
 
-    render(<Popup finishTime={123} finishClock={'01:01:01'} />);
+    render(
+      <Popup finishTime={123} finishClock={'01:01:01'} showInput={true} />,
+    );
 
     const input = await screen.findByRole('textbox');
     const button = await screen.findByRole('button');
@@ -95,7 +109,9 @@ describe.only('Popup', () => {
   it('should show highscore after form submit', async () => {
     const user = userEvent.setup();
 
-    render(<Popup finishTime={123} finishClock={'01:01:01'} />);
+    render(
+      <Popup finishTime={123} finishClock={'01:01:01'} showInput={true} />,
+    );
 
     const input = await screen.findByRole('textbox');
     const button = await screen.findByRole('button');
