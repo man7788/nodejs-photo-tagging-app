@@ -5,10 +5,12 @@
   color: teal;
   font-size: 1.5rem;
   font-weight: 600;
+  filter: brightness(50%);
+  color: grey;
 }
 
 .Choice > img {
-  border: 3px solid white;
+  border: 3px solid cyan;
   width: 80px;
   cursor: pointer;
 }
