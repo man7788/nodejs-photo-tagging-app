@@ -14,7 +14,6 @@ const Popup = ({ finishTime, finishClock, showInput }) => {
 
   const [serverError, setServerError] = useState(false);
   const [formErrors, setFormErrors] = useState(null);
-  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(false);
 
   const onhandleChange = (e) => {
@@ -23,6 +22,7 @@ const Popup = ({ finishTime, finishClock, showInput }) => {
 
   const onSubmitTask = (e) => {
     e.preventDefault();
+    setLoading(true);
 
     submitScore(e);
     setName('');
@@ -40,6 +40,7 @@ const Popup = ({ finishTime, finishClock, showInput }) => {
     } else if (result && result.message === 'form validation error') {
       setFormErrors(result.error);
     } else {
+      setLoading(false);
       setShowTable(true);
       setPopupStyle({ display: 'none' });
     }
