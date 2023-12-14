@@ -1,6 +1,5 @@
 import styles from '../styles/Game.module.css';
 import { useState, useEffect, useRef, useReducer } from 'react';
-import { useTargets } from '../api/targetAPI';
 import Dropdown from './Dropdown';
 import Popup from './Popup';
 import Clock from './Clock';
@@ -15,16 +14,13 @@ import manageDropdown from '../controls/dropdownControls';
 import gameReducer from '../reducers/gameReducer';
 import gameOverReducer from '../reducers/gameOverReducer';
 
-function Game() {
+function Game({ gameTargets }) {
   // Reducers
   const [gameState, gameDispatch] = useReducer(gameReducer, gameDefaultValue);
   const [gameOverState, gameOverDispatch] = useReducer(
     gameOverReducer,
     gameOverDefaultValue,
   );
-
-  // API fetch
-  const { targets, error, loading } = useTargets();
 
   // Target controls
   const [names, setNames] = useState([]);
@@ -37,18 +33,8 @@ function Game() {
   // Record start time
   useEffect(() => {
     gameOverDispatch({ type: 'save_start_time', startTime: Date.now() });
-  }, [loading]);
-
-  // Reorganize fetched data to useState
-  useEffect(() => {
-    const nameList = [];
-
-    for (const i in targets) {
-      nameList.push(targets[i].name);
-    }
-
-    setNames(nameList);
-  }, [targets]);
+    setNames(gameTargets);
+  }, []);
 
   // Game over and tell clock to stop
   useEffect(() => {
@@ -87,17 +73,10 @@ function Game() {
     );
   };
 
-  if (error || gameState.serverError)
+  if (gameState.serverError)
     return (
       <div className={styles.error}>
         <h1>A network error was encountered</h1>
-      </div>
-    );
-
-  if (loading)
-    return (
-      <div className={styles.loading}>
-        <h1>Loading...</h1>
       </div>
     );
 
@@ -130,7 +109,7 @@ function Game() {
               />
             </targetContext.Provider>
           )}
-          <Frame updateIcon={gameState.updateIcon} />
+          <Frame names={names} updateIcon={gameState.updateIcon} />
           {gameState.showTryAgain && <Prompt dispatch={gameDispatch} />}
           {gameState.showDropdown && (
             <Dropdown
