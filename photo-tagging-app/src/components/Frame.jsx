@@ -4,8 +4,24 @@ import PropTypes from 'prop-types';
 import Album from '../images/Album';
 import Photo from './Photo';
 
-const Frame = ({ updateIcon }) => {
+const Frame = ({ updateIcon, names }) => {
   const [iconStyles, setIconStyles] = useState({});
+  const [icons, setIcons] = useState([]);
+
+  useEffect(() => {
+    const newIcons = [];
+
+    names.forEach((name) => {
+      const nameToMatch = name[0].toUpperCase() + name.slice(1);
+      Album.forEach((peguin) => {
+        if (Object.keys(peguin)[0] === nameToMatch) {
+          newIcons.push(peguin);
+        }
+      });
+    });
+
+    setIcons(newIcons);
+  }, [names]);
 
   useEffect(() => {
     const newStyle = { color: 'grey', filter: 'brightness(50%)' };
@@ -19,7 +35,7 @@ const Frame = ({ updateIcon }) => {
       onClick={(e) => {
         e.stopPropagation();
       }}>
-      {Album.map((peguin) => {
+      {icons.map((peguin) => {
         const name = Object.keys(peguin)[0];
         const style = iconStyles[name.toLowerCase()];
         return (
