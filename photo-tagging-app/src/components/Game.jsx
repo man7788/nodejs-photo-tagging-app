@@ -109,6 +109,9 @@ function Game({ gameTargets }) {
               />
             </targetContext.Provider>
           )}
+          {gameState.loading && (
+            <div className={styles.loading}>Loading...</div>
+          )}
           <Frame names={names} updateIcon={gameState.updateIcon} />
           {gameState.showTryAgain && <Prompt dispatch={gameDispatch} />}
           {gameState.showDropdown && (
@@ -150,7 +153,9 @@ const gameDefaultValue = {
   updateTarget: {},
   updateIcon: '',
   score: [],
+  loading: false,
 };
+
 const gameOverDefaultValue = {
   startTime: 0,
   gameOver: false,
