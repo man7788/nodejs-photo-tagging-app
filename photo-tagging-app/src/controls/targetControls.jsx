@@ -8,6 +8,7 @@ const manageTargets = (e, names, allTargets, clickPos, score, gameDispatch) => {
       type: 'click_menu',
       showDropdown: false,
       cursor: { cursor: 'pointer' },
+      loading: true,
     });
 
     const selection = e.target.textContent.toLowerCase();
@@ -33,7 +34,11 @@ const manageTargets = (e, names, allTargets, clickPos, score, gameDispatch) => {
     if (result && result.result) {
       updateStyle(result.position, selection);
     } else {
-      gameDispatch({ type: 'show_try_again', showTryAgain: true });
+      gameDispatch({
+        type: 'show_try_again',
+        showTryAgain: true,
+        loading: false,
+      });
     }
 
     if (result && result.error) {
@@ -50,6 +55,7 @@ const manageTargets = (e, names, allTargets, clickPos, score, gameDispatch) => {
       type: 'update_style',
       updateTarget: targetData,
       updateIcon: iconData,
+      loading: false,
     });
 
     checkScore(selection);
