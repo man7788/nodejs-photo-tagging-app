@@ -1,12 +1,12 @@
+/* eslint-disable react/display-name */
 import styles from '../styles/Selection.module.css';
 import { useEffect, useState } from 'react';
 // import PropTypes from 'prop-types';
 import Album from '../images/Album';
 import Choice from './Choice';
 
-const Selection = () => {
+const Selection = ({ setChoiceStyles, choiceStyles }) => {
   const [updateStyle, setUpdateStyle] = useState(null);
-  const [choiceStyles, setChoiceStyles] = useState({});
 
   useEffect(() => {
     if (updateStyle) {
@@ -15,7 +15,10 @@ const Selection = () => {
         delete newChoiceStyles[updateStyle];
         setChoiceStyles(newChoiceStyles);
       } else {
-        const newStyle = { color: 'grey', filter: 'brightness(50%)' };
+        const newStyle = {
+          color: 'teal',
+          filter: 'brightness(100%)',
+        };
         const newChoiceStyles = { ...choiceStyles, [updateStyle]: newStyle };
         setChoiceStyles(newChoiceStyles);
       }
@@ -45,4 +48,5 @@ const Selection = () => {
     </div>
   );
 };
+
 export default Selection;
