@@ -126,6 +126,7 @@ function Game({ gameTargets }) {
             <Popup
               finishTime={gameOverState.finishTime}
               finishClock={gameOverState.finishClock}
+              showInput={names?.length === 3 ? true : false}
             />
           )}
           <button onClick={onShowHome}>
