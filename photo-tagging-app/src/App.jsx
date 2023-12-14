@@ -13,7 +13,7 @@ function App() {
   const [highscoreMessage, setHighscoreMessage] = useState(false);
 
   useEffect(() => {
-    setGameTargets(Object.keys(choiceStyles));
+    setGameTargets(Object.keys(choiceStyles).sort());
   }, [choiceStyles]);
 
   useEffect(() => {
