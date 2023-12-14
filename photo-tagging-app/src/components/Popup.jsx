@@ -5,7 +5,7 @@ import useToken from '../api/tokenAPI';
 import { submitScoreAPI } from '../api/scoreAPI';
 import Highscore from './Highscore';
 
-const Popup = ({ finishTime, finishClock }) => {
+const Popup = ({ finishTime, finishClock, showInput }) => {
   const { token, tokenError, tokenLoading } = useToken();
 
   const [popupStyle, setPopupStyle] = useState({ display: 'flex' });
@@ -71,19 +71,26 @@ const Popup = ({ finishTime, finishClock }) => {
           <div>Finish Time:</div>
           <div>{finishClock}</div>
         </div>
-        <form method="post" onSubmit={onSubmitTask}>
-          <div>Submit Your Score</div>
-          <label htmlFor="name">Name:</label>
-          <input onChange={onhandleChange} value={name} type="text" id="name" />
-          {formErrors && (
-            <ul>
-              {formErrors.map((error) => (
-                <li key={error.msg}>{error.msg}</li>
-              ))}
-            </ul>
-          )}
-          <button type="submit">Submit</button>
-        </form>
+        {showInput && (
+          <form method="post" onSubmit={onSubmitTask}>
+            <div>Submit Your Score</div>
+            <label htmlFor="name">Name:</label>
+            <input
+              onChange={onhandleChange}
+              value={name}
+              type="text"
+              id="name"
+            />
+            {formErrors && (
+              <ul>
+                {formErrors.map((error) => (
+                  <li key={error.msg}>{error.msg}</li>
+                ))}
+              </ul>
+            )}
+            <button type="submit">Submit</button>
+          </form>
+        )}
       </div>
       {showTable && <Highscore />}
     </div>
