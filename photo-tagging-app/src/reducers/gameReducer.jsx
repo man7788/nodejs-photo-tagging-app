@@ -15,12 +15,14 @@ const gameReducer = (state, action) => {
         ...state,
         showDropdown: action.showDropdown,
         cursor: action.cursor,
+        loading: action.loading,
       };
     }
     case 'show_try_again': {
       return {
         ...state,
         showTryAgain: action.showTryAgain,
+        loading: action.loading,
       };
     }
     case 'hide_try_again': {
@@ -40,6 +42,7 @@ const gameReducer = (state, action) => {
         ...state,
         updateTarget: action.updateTarget,
         updateIcon: action.updateIcon,
+        loading: action.loading,
       };
     }
     case 'set_new_score': {
