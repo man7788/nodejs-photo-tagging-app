@@ -7,11 +7,11 @@ afterEach(() => {
 });
 
 vi.mock('../api/targetAPI', () => ({
-  useTargets: vi.fn().mockReturnValue({
-    targets: [{ name: 'peter' }, { name: 'sam' }, { name: 'eric' }],
-    error: null,
-    loading: false,
-  }),
+  // useTargets: vi.fn().mockReturnValue({
+  //   targets: [{ name: 'peter' }, { name: 'sam' }, { name: 'eric' }],
+  //   error: null,
+  //   loading: false,
+  // }),
   checkTargetAPI: vi.fn().mockReturnValue({
     result: true,
     position: { top: 115, left: 282 },
@@ -31,7 +31,7 @@ describe('Dropdown menu', () => {
     it('should display dropdown menu when click anywhere in app', async () => {
       const user = userEvent.setup();
 
-      render(<Game />);
+      render(<Game gameTargets={['eric']} />);
 
       const appScreen = screen.getByTestId('App');
 
@@ -55,7 +55,7 @@ describe('Dropdown menu', () => {
     it('should hide dropdown menu when click outside of dropdown menu', async () => {
       const user = userEvent.setup();
 
-      render(<Game />);
+      render(<Game gameTargets={['eric']} />);
 
       const appScreen = screen.getByTestId('App');
 
@@ -81,7 +81,7 @@ describe('Dropdown menu', () => {
     it('should hide dropdown menu after selecting a name ', async () => {
       const user = userEvent.setup();
 
-      render(<Game />);
+      render(<Game gameTargets={['eric']} />);
 
       const appScreen = screen.getByTestId('App');
 
@@ -104,7 +104,7 @@ describe('Dropdown menu', () => {
       it('should change photo and text styles', async () => {
         const user = userEvent.setup();
 
-        render(<Game />);
+        render(<Game gameTargets={['eric']} />);
 
         const appScreen = screen.getByTestId('App');
 
@@ -124,7 +124,7 @@ describe('Dropdown menu', () => {
       it('should highlight correctly selected target', async () => {
         const user = userEvent.setup();
 
-        render(<Game />);
+        render(<Game gameTargets={['eric']} />);
 
         const appScreen = screen.getByTestId('App');
 
@@ -155,7 +155,7 @@ describe('Dropdown menu', () => {
         const checkTarget = await import('../api/targetAPI');
         checkTarget.checkTargetAPI = vi.fn().mockReturnValue({ result: false });
 
-        render(<Game />);
+        render(<Game gameTargets={['eric']} />);
 
         const appScreen = screen.getByTestId('App');
 
@@ -196,7 +196,7 @@ describe('Dropdown menu', () => {
         const checkTarget = await import('../api/targetAPI');
         checkTarget.checkTargetAPI = vi.fn().mockReturnValue({ result: false });
 
-        render(<Game />);
+        render(<Game gameTargets={['eric']} />);
 
         const appScreen = screen.getByTestId('App');
 
@@ -242,7 +242,7 @@ describe('Pop-up screen', () => {
     const checkTarget = await import('../api/targetAPI');
     checkTarget.checkTargetAPI = vi.fn().mockReturnValue({ result: true });
 
-    render(<Game />);
+    render(<Game gameTargets={['eric', 'peter', 'sam']} />);
 
     const appScreen = screen.getByTestId('App');
     const clock = screen.getByTestId('clock');
@@ -293,7 +293,7 @@ describe('Home button', () => {
   it('should render home when clicked', async () => {
     const user = userEvent.setup();
 
-    render(<Game />);
+    render(<Game gameTargets={['eric']} />);
 
     const homeButton = screen.getByRole('button');
 
@@ -303,6 +303,6 @@ describe('Home button', () => {
 
     const heading = await screen.findByRole('heading');
 
-    expect(heading.textContent).toMatch(/Find Them All:/);
+    expect(heading.textContent).toMatch(/Select Your Target/);
   });
 });
