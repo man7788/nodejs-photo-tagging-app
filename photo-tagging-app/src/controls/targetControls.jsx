@@ -1,18 +1,33 @@
 import { checkTargetAPI } from '../api/targetAPI';
 
-const manageTargets = (e, names, allTargets, clickPos, score, gameDispatch) => {
+const manageTargets = (
+  e,
+  names,
+  allTargets,
+  clickPos,
+  score,
+  gameState,
+  gameDispatch,
+) => {
   const clickMenu = (e) => {
     e.stopPropagation();
 
-    gameDispatch({
-      type: 'click_menu',
-      showDropdown: false,
-      cursor: { cursor: 'pointer' },
-      loading: true,
-    });
+    if (gameState.showDropdown) {
+      gameDispatch({
+        type: 'click_menu',
+        showDropdown: false,
+        cursor: { cursor: 'pointer' },
+      });
+    }
 
     const selection = e.target.textContent.toLowerCase();
     if (names.includes(selection)) {
+      gameDispatch({
+        type: 'click_menu',
+        showDropdown: false,
+        cursor: { cursor: 'pointer' },
+        loading: true,
+      });
       const element = allTargets.current[selection];
       const range = {
         topRange: element.clientHeight,
