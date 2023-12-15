@@ -39,6 +39,7 @@ const Popup = ({ finishTime, finishClock, showInput }) => {
       setServerError(true);
     } else if (result && result.message === 'form validation error') {
       setFormErrors(result.error);
+      setLoading(false);
     } else {
       setLoading(false);
       setShowTable(true);
