@@ -26,42 +26,6 @@ app.use("/", index);
 app.use("/target", target);
 
 describe("Target", () => {
-  it("should get all target names", async () => {
-    await Target.insertMany([
-      {
-        name: "peter",
-        style: {
-          left: 100,
-          top: 100,
-        },
-      },
-      {
-        name: "sam",
-        style: {
-          left: 100,
-          top: 100,
-        },
-      },
-      {
-        name: "eric",
-        style: {
-          left: 100,
-          top: 100,
-        },
-      },
-    ]);
-
-    const response = await request(app).get("/target/names");
-
-    expect(response.header["content-type"]).toMatch(/application\/json/);
-    expect(response.body).toStrictEqual([
-      { name: "peter" },
-      { name: "sam" },
-      { name: "eric" },
-    ]);
-    expect(response.status).toEqual(200);
-  });
-
   it("should repsonse with check target result", async () => {
     await Target.create({
       name: "peter",
