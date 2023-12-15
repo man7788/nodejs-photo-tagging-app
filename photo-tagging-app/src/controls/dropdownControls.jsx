@@ -1,7 +1,7 @@
-const manageDropdown = (e, showPopup, gameDispatch) => {
+const manageDropdown = (e, showPopup, gameState, gameDispatch) => {
   e.stopPropagation();
 
-  if (!showPopup) {
+  if (!showPopup && !gameState.loading) {
     const target = e.target.getBoundingClientRect();
 
     const dropdownY = e.pageY - target.y;
