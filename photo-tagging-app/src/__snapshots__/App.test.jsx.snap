@@ -16,40 +16,44 @@ exports[`highscore button > home button in highscore should return to home when 
         class="_homeContainer_6dc87e"
       >
         <h1>
-          Find Them All:
+          Select Your Target
         </h1>
         <div
-          class="_frame_e244da"
+          class="_selection_6dc87e"
         >
           <div
-            class="_Photo_185d34"
-            data-testid="photo"
+            class="_selection_65a47e"
           >
-            <img
-              alt="Peter"
-              src="/src/images/peter.jpg"
-            />
-            Peter
-          </div>
-          <div
-            class="_Photo_185d34"
-            data-testid="photo"
-          >
-            <img
-              alt="Sam"
-              src="/src/images/sam.jpg"
-            />
-            Sam
-          </div>
-          <div
-            class="_Photo_185d34"
-            data-testid="photo"
-          >
-            <img
-              alt="Eric"
-              src="/src/images/eric.jpg"
-            />
-            Eric
+            <div
+              class="_Choice_970363"
+              data-testid="photo"
+            >
+              <img
+                alt="Eric"
+                src="/src/images/eric.jpg"
+              />
+              Eric
+            </div>
+            <div
+              class="_Choice_970363"
+              data-testid="photo"
+            >
+              <img
+                alt="Peter"
+                src="/src/images/peter.jpg"
+              />
+              Peter
+            </div>
+            <div
+              class="_Choice_970363"
+              data-testid="photo"
+            >
+              <img
+                alt="Sam"
+                src="/src/images/sam.jpg"
+              />
+              Sam
+            </div>
           </div>
         </div>
         <button>
@@ -80,40 +84,44 @@ exports[`highscore button > home button in highscore should return to home when 
         class="_homeContainer_6dc87e"
       >
         <h1>
-          Find Them All:
+          Select Your Target
         </h1>
         <div
-          class="_frame_e244da"
+          class="_selection_6dc87e"
         >
           <div
-            class="_Photo_185d34"
-            data-testid="photo"
+            class="_selection_65a47e"
           >
-            <img
-              alt="Peter"
-              src="/src/images/peter.jpg"
-            />
-            Peter
-          </div>
-          <div
-            class="_Photo_185d34"
-            data-testid="photo"
-          >
-            <img
-              alt="Sam"
-              src="/src/images/sam.jpg"
-            />
-            Sam
-          </div>
-          <div
-            class="_Photo_185d34"
-            data-testid="photo"
-          >
-            <img
-              alt="Eric"
-              src="/src/images/eric.jpg"
-            />
-            Eric
+            <div
+              class="_Choice_970363"
+              data-testid="photo"
+            >
+              <img
+                alt="Eric"
+                src="/src/images/eric.jpg"
+              />
+              Eric
+            </div>
+            <div
+              class="_Choice_970363"
+              data-testid="photo"
+            >
+              <img
+                alt="Peter"
+                src="/src/images/peter.jpg"
+              />
+              Peter
+            </div>
+            <div
+              class="_Choice_970363"
+              data-testid="photo"
+            >
+              <img
+                alt="Sam"
+                src="/src/images/sam.jpg"
+              />
+              Sam
+            </div>
           </div>
         </div>
         <button>
