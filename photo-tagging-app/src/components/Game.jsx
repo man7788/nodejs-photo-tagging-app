@@ -59,7 +59,7 @@ function Game({ gameTargets }) {
   }, [gameOverState.showPopup]);
 
   const onShowDropdown = (e) => {
-    manageDropdown(e, gameOverState.showPopup, gameDispatch);
+    manageDropdown(e, gameOverState.showPopup, gameState, gameDispatch);
   };
 
   const clickMenu = (e) => {
@@ -69,6 +69,7 @@ function Game({ gameTargets }) {
       allTargets,
       gameState.clickPos,
       gameState.score,
+      gameState,
       gameDispatch,
     );
   };
@@ -89,7 +90,7 @@ function Game({ gameTargets }) {
           className={styles.Game}
           onClick={gameState.showDropdown ? clickMenu : onShowDropdown}
           style={
-            gameOverState.defaultCursor
+            gameState.loading || gameOverState.defaultCursor
               ? { cursor: 'default' }
               : gameState.cursor
           }
